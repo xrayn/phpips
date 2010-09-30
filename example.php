@@ -1,4 +1,6 @@
 <?php
+$phpids_settings["debug_activated"]=true;
+$phpids_settings['simulation_activated']=false;
 define("PATH_TO_ROOT", "/var/www/eclipse-workspaces/eclipse_helios/php-ips/" );
 set_include_path  ("/var/www/eclipse-workspaces/eclipse_helios/php-ips/phpids-0.6.4/lib/");
 
@@ -35,6 +37,6 @@ if (!$result->isEmpty()) {
 
 <html>
 <form action="example.php" method="post"><textarea name="data" rows="10"
-	cols="10"><?php echo $_POST["data"]?></textarea> <br />
+	cols="50"><?php if(isset($_POST["data"]))echo $_POST["data"]?></textarea> <br />
 <input type="submit" /></form>
 </html>

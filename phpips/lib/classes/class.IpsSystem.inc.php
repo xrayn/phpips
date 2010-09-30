@@ -38,8 +38,24 @@ class IpsSystem {
 		$this->setIdsResult($idsResult);
 		$this->_init();
 	}
+	
+	/**
+	 * @desc check if there is already a session, the ips system makes less sense without any session
+	 * if no session is found, start one. Further if a session is found regenerate the id so each request gets a new session_id
+	 */
+	private function __checkSession(){
+		if (session_id()==""){
+			session_start();
+		}
+		/*
+		 * @lookhere: in very high performance applications this should be diabled. Or configurable!
+		 */	
+		session_regenerate_id(TRUE);
+		
+	}
 
 	private function _init() {
+		$this->__checkSession();
 		/*
 		* Adding the actions and initialize singleton Commands.
 		* Actions have to be added in priority order:

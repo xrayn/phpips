@@ -17,11 +17,11 @@ class IpsWarnCommand extends IpsCommandAbstract {
 	}
 
 	protected function realExecute() {
-		global $settings;
-
-		$url = $settings["estudy_base_url"];
-		header("Location: $url"."news/news.php?IDSWarning");
-		exit(0);
+//		global $settings;
+//
+//		$url = $settings["estudy_base_url"];
+//		header("Location: $url"."news/news.php?IDSWarning");
+//		exit(0);
 	}
 
 	protected function realSimulate($fileHandle) {

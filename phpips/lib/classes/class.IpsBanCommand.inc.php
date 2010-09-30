@@ -1,7 +1,10 @@
 <?php
 
+/*
+ * extending the kick command implies loading it before, cause this cannot be resolved from the factory
+ */
+require_once (PATH_TO_ROOT . "phpips/lib/classes/class.IpsKickCommand.inc.php");
 
-//require_once (PATH_TO_ROOT."common/init.inc.php"); // fuer db handle
 
 class IpsBanCommand extends IpsKickCommand {
 	private static $_instance=null;

@@ -18,7 +18,7 @@ if ($IpsSystem->getImpact() > 1) {
 			$sessiondata[$value] = 0;
 
 		$sessiondata[$value] += $IpsSystem->getImpact();
-		IpsDebugger::debug($sessiondata[$value]);
+		//IpsDebugger::debug($sessiondata[$value]);
 		
 		//disabled debug fb($sessiondata[$value]);
 	}

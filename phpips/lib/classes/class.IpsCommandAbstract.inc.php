@@ -26,7 +26,7 @@ abstract class IpsCommandAbstract implements IpsCommand {
 	abstract protected function realSimulate($fileHandle);
 
 	public function execute() {
-		IpsDebugger::debug(array("COMMAND EXECUTED"=>$this));
+		//IpsDebugger::debug(array("COMMAND EXECUTED"=>$this));
 
 		if(!$this->_isExecuted && $this->_execute) {
 			$this->_isExecuted = true;
