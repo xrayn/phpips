@@ -21,7 +21,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  +--------------------------------------------------------------------------*/
 
-require_once (PATH_TO_ROOT."common/init.inc.php"); // fuer db handle
+//require_once (PATH_TO_ROOT."common/init.inc.php"); // fuer db handle
 
 class IpsBanCommand extends IpsKickCommand {
 	private static $_instance=null;

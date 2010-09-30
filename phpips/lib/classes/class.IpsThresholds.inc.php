@@ -22,7 +22,7 @@
  +--------------------------------------------------------------------------*/
 
 /* make sure phpids_settings are loaded and parsed from database */
-require_once (PATH_TO_ROOT . "phpids/phpids_settings.inc.php");
+//require_once (PATH_TO_ROOT . "phpids/phpids_settings.inc.php");
 
 class IpsThresholds {
 
@@ -44,7 +44,7 @@ class IpsThresholds {
 						"log" => 5, "warn" => 10, "kick" => 20, "ban" => 50
 						),
 				"xss" => array(
-						"log" => 10, "warn" => 20, "kick" => 30, "ban" => 50
+						"log" => 5, "warn" => 20, "kick" => 30, "ban" => 50
 						),
 				"rce" => array(
 						"log" => 10, "warn" => 20, "kick" => 30, "ban" => 50
@@ -84,23 +84,23 @@ class IpsThresholds {
 	 * @throws Exception
 	 */
 	private function _initThreshholds() {
-		global $phpids_settings;
-		
-		/* countermeasure types */
-		$cm_types = array("log", "warn", "kick", "ban");
-		
-		/* initialize thresholds by setting values */
-		foreach ($this->_threshold as $type => $thresholds) {
-			if (empty($phpids_settings["ips_threshold_" . $type])) {
-				throw new Exception("Thresholds for $type not found in settings!");
-			} else {
-				$settings_thresholds = explode(",", $phpids_settings["ips_threshold_" . $type]);
-				foreach ($cm_types as $i => $cm_type) {
-					$this->_threshold[$type][$cm_type] = intval(trim($settings_thresholds[$i]));
-				}
-			}
-		}
-		
+//		global $phpids_settings;
+//		
+//		/* countermeasure types */
+//		$cm_types = array("log", "warn", "kick", "ban");
+//		
+//		/* initialize thresholds by setting values */
+//		foreach ($this->_threshold as $type => $thresholds) {
+//			if (empty($phpids_settings["ips_threshold_" . $type])) {
+//				throw new Exception("Thresholds for $type not found in settings!");
+//			} else {
+//				$settings_thresholds = explode(",", $phpids_settings["ips_threshold_" . $type]);
+//				foreach ($cm_types as $i => $cm_type) {
+//					$this->_threshold[$type][$cm_type] = intval(trim($settings_thresholds[$i]));
+//				}
+//			}
+//		}
+//		
 	/* echo "<pre>";print_r($this->_threshold);echo "<pre>"; */
 	}
 

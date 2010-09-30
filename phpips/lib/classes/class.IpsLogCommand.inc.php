@@ -21,8 +21,8 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  +--------------------------------------------------------------------------*/
-require_once(PATH_TO_ROOT."phpids/classes/iface.IpsCommand.inc.php");
-require_once (PATH_TO_ROOT."phpids/classes/class.IpsCommandAbstract.inc.php");
+require_once(PATH_TO_ROOT."phpips/lib/classes/iface.IpsCommand.inc.php");
+require_once (PATH_TO_ROOT."phpips/lib/classes/class.IpsCommandAbstract.inc.php");
 
 class IpsLogCommand extends IpsCommandAbstract {
 	private static $_instance=null;
@@ -34,16 +34,16 @@ class IpsLogCommand extends IpsCommandAbstract {
 	}
 
 	protected function realExecute() {
-		global $phpids_settings;
+		//global $phpids_settings;
 
 		IpsDebugger::debug(array("CALLED REALEXECUTE"=>$this));
 		// we don't need to log to the db twice so we just log to the file
 		IpsDebugger::debug(array("executed Log Command"=>$this->_data));
 
-		$logfile = $phpids_settings["command_logfile"];
+		$logfile = "/tmp/mylog";
 
 		if(!empty($logfile)) {
-			$logfile = realpath(PATH_TO_ROOT) . "/" . $logfile;
+			//$logfile = realpath(PATH_TO_ROOT) . "/" . $logfile;
 			$fh = fopen($logfile, "a+");
 		}
 

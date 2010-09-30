@@ -1,5 +1,5 @@
 <?php
-require_once (PATH_TO_ROOT . "phpids/classes/iface.IpsCommand.inc.php");
+require_once (PATH_TO_ROOT . "phpips/lib/classes/iface.IpsCommand.inc.php");
 
 abstract class IpsCommandAbstract implements IpsCommand {
 	protected $_data=array();

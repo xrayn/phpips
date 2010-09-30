@@ -21,9 +21,9 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  +--------------------------------------------------------------------------*/
 
-require_once (PATH_TO_ROOT . "phpids/classes/class.IpsSystem.inc.php");
+require_once (PATH_TO_ROOT . "phpips/lib/classes/class.IpsSystem.inc.php");
 
-$IpsSystem = new IpsSystem($idsResult);
+$IpsSystem = new IpsSystem($result);
 $sessiondata = $IpsSystem->getSessionData();
 
 //$firephp = FirePHP::getInstance(true);

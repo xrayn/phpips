@@ -22,9 +22,9 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  +--------------------------------------------------------------------------*/
 
-require_once (PATH_TO_ROOT . "phpids/classes/class.IpsThresholds.inc.php");
-require_once (PATH_TO_ROOT . "phpids/classes/class.IpsCommandFactory.inc.php");
-require_once (PATH_TO_ROOT . "phpids/classes/class.IpsDebugger.inc.php");
+require_once (PATH_TO_ROOT . "phpips/lib/classes/class.IpsThresholds.inc.php");
+require_once (PATH_TO_ROOT . "phpips/lib/classes/class.IpsCommandFactory.inc.php");
+require_once (PATH_TO_ROOT . "phpips/lib/classes/class.IpsDebugger.inc.php");
 
 
 class IpsSystem {
