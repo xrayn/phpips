@@ -23,11 +23,12 @@ $ids = new IDS_Monitor($request, $init);
  */
 $result = $ids->run();
 if (!$result->isEmpty()) {
-	// Take a look at the result object
-	echo $result;
+	// Take a look at the result object with the ips system
+	//echo $result;
+	require_once 'phpips/ips_init.inc.php';
 }
 
-require_once 'phpips/ips_init.inc.php';
+
 
 ?>
 
