@@ -69,7 +69,6 @@ class IpsSystem {
 	private function _init() {
 		$this->__checkSession();
 		
-		var_dump($this->_config);
 		/*
 		 * Adding the actions and initialize singleton Commands.
 		 * Actions have to be added in priority order:
@@ -80,6 +79,7 @@ class IpsSystem {
 		 * They each have to be the last array element of an action!
 		 */
 		if ($this->_config==null){
+			throw new Exception("Obsolete!!!");
 			$this->addAction("ban", array(IpsCommandFactory::createCommand("log"), IpsCommandFactory::createCommand("mail"), IpsCommandFactory::createCommand("ban")));
 			$this->addAction("kick", array(IpsCommandFactory::createCommand("log"), IpsCommandFactory::createCommand("mail"), IpsCommandFactory::createCommand("kick")));
 			//$this->addAction("mail", array(IpsCommandFactory::createCommand("log"), IpsCommandFactory::createCommand("mail")));

@@ -134,6 +134,10 @@ class IpsThresholds {
 	 * @return string highest action
 	 */
 	public function evaluateIntrusion ($vectorList, $vectorvalue) {
+		/*
+		 * @lookhere: hardcoded, has to by dynamic
+		 * 
+		 */
 		$highestAction = "";
 		foreach ($vectorList as $vectorname) {
 			$maxHit = $this->getMaxThresholdHit ($vectorname, $vectorvalue);
