@@ -38,7 +38,7 @@ class IpsSystem {
 		$this->setIdsResult($idsResult);
 		$this->_init();
 	}
-	
+
 	/**
 	 * @desc check if there is already a session, the ips system makes less sense without any session
 	 * if no session is found, start one. Further if a session is found regenerate the id so each request gets a new session_id
@@ -49,22 +49,22 @@ class IpsSystem {
 		}
 		/*
 		 * @lookhere: in very high performance applications this should be diabled. Or configurable!
-		 */	
+		 */
 		session_regenerate_id(TRUE);
-		
+
 	}
 
 	private function _init() {
 		$this->__checkSession();
 		/*
-		* Adding the actions and initialize singleton Commands.
-		* Actions have to be added in priority order:
-		* First added --> highest priority; last added --> lowest priority.
-		* If tags reach thresholds for different actions, the one with highest priority is used.
-		* Also important:
-		* Commands 'warn', 'kick' and 'ban' exit the system after executed.
-		* They each have to be the last array element of an action!
-		*/
+		 * Adding the actions and initialize singleton Commands.
+		 * Actions have to be added in priority order:
+		 * First added --> highest priority; last added --> lowest priority.
+		 * If tags reach thresholds for different actions, the one with highest priority is used.
+		 * Also important:
+		 * Commands 'warn', 'kick' and 'ban' exit the system after executed.
+		 * They each have to be the last array element of an action!
+		 */
 		$this->addAction("ban", array(IpsCommandFactory::createCommand("log"), IpsCommandFactory::createCommand("mail"), IpsCommandFactory::createCommand("ban")));
 		$this->addAction("kick", array(IpsCommandFactory::createCommand("log"), IpsCommandFactory::createCommand("mail"), IpsCommandFactory::createCommand("kick")));
 		//$this->addAction("mail", array(IpsCommandFactory::createCommand("log"), IpsCommandFactory::createCommand("mail")));
@@ -92,7 +92,7 @@ class IpsSystem {
 	 * @desc analyses the $impactVector and extracts the lastaction which matched the highest threshold.
 	 * For this "lastaction" it enables the defined commands
 	 */
-	public function actionDispatcher($impactVector) {
+	private function actionDispatcher($impactVector) {
 		$lastaction = $impactVector["lastaction"];
 
 		foreach ($this->_actions as $actionName => $commands) {
@@ -110,7 +110,7 @@ class IpsSystem {
 	 * @desc Execute all enabled commands (enabled by actionDispatcher()).
 	 * Commands of action with highest priority are executed first.
 	 */
-	public function finalExecuteDispatcher() {
+	private function finalExecuteDispatcher() {
 		global $phpids_settings;
 
 		foreach($this->_actions as $key => $commands){
@@ -135,10 +135,10 @@ class IpsSystem {
 	 * returns true if any defined impact value is exceeded
 	 *
 	 */
-	public function checkSessionImpact() {
+	private function checkSessionImpact() {
 		IpsDebugger::debug("checkSessionImpact");
 		IpsDebugger::debug(array("THIS SESSION DATA"=>$this->_sessiondata));
-		foreach ($this->_sessiondata as $key => $value) {			
+		foreach ($this->_sessiondata as $key => $value) {
 			// should be switch case later when we have the matrix
 			//$this->actionResolver($this->_threshold->getMaxThresholdHit($key,$value));
 			$maxThresholdHit = $this->_threshold->getMaxThresholdHit($key, $value);
@@ -157,10 +157,10 @@ class IpsSystem {
 		}
 	}
 
-	public function doSomething() {	//var_dump($this->_idsResult);
+	private function doSomething() {	//var_dump($this->_idsResult);
 	}
 
-	public function getIdsResult() {
+	private function getIdsResult() {
 		return $this->_idsResult;
 	}
 
@@ -168,7 +168,7 @@ class IpsSystem {
 	 * @param IDS_Report $idsResult
 	 * @desc Sets the current idsResult from the ids System
 	 */
-	public function setIdsResult(IDS_Report $idsResult) {
+	private function setIdsResult(IDS_Report $idsResult) {
 		$this->_idsResult = $idsResult;
 	}
 
@@ -177,7 +177,7 @@ class IpsSystem {
 	 * @desc Gets the total Impact value of the idsResult-Object
 	 */
 
-	public function getImpact() {
+	private function getImpact() {
 		return $this->_idsResult->getImpact();
 	}
 
@@ -185,7 +185,7 @@ class IpsSystem {
 	 * @return array
 	 * @desc Gets the affected Tags of the idsResult-Object
 	 */
-	public function getTags() {
+	private function getTags() {
 		return $this->_idsResult->getTags();
 	}
 
@@ -194,7 +194,7 @@ class IpsSystem {
 	 * @desc Gets the current sessiondata
 	 */
 
-	public function getSessionData() {
+	private function getSessionData() {
 		return $this->_sessiondata;
 	}
 
@@ -202,7 +202,7 @@ class IpsSystem {
 	 * @param array $sessiondata
 	 * @desc saves the current sessiondata
 	 */
-	public function saveSessionData($sessiondata) {
+	private function saveSessionData($sessiondata) {
 		$_SESSION["IPSDATA"] = $sessiondata;
 		$this->_sessiondata = $sessiondata;
 		IpsDebugger::debug("SAVE SESSION DATA!!!!");
@@ -213,12 +213,49 @@ class IpsSystem {
 	 * @return array|NULL
 	 * @desc returns a single impactError, can be used in a loop till buffer $this->_impactError is empty
 	 */
-	public function getSessionImpactError() {
+	private function getSessionImpactError() {
 		//disabled debug fb("size of _impacterror".sizeof($this->_impactError));
 		if (sizeof($this->_impactError) > 0) {
 			return array_pop($this->_impactError);
 		} else {
 			return null;
 		}
+	}
+	public function run(){
+		
+		if ($this->getImpact() > 1) {
+			//add each impact to sessiondata
+			foreach ($this->getTags() as $value) {
+				//disabled debug fb($value."".$IpsSystem->getImpact());
+				if(!isset($this->_sessiondata[$value]))
+				$this->_sessiondata[$value] = 0;
+
+				$this->_sessiondata[$value] += $this->getImpact();
+				//IpsDebugger::debug($sessiondata[$value]);
+
+				//disabled debug fb($sessiondata[$value]);
+			}
+			//disabled debug fb($sessiondata);
+			$this->saveSessionData($this->_sessiondata);
+			
+		}
+
+		if ($this->checkSessionImpact()) {
+			IpsDebugger::debug("Checking session Impact");
+			// one or more impacts in session reached critical value
+
+			// Enable commands to each last action
+			$vector = $this->getSessionImpactError();
+			//$IpsSystem->saveSessionData($sessiondata);
+
+			while (is_array($vector)) {
+				$this->actionDispatcher($vector);
+				$vector = $this->getSessionImpactError();
+			}
+
+			// Execute enabled commands of action with highest priority
+			$this->finalExecuteDispatcher();
+		}
+
 	}
 }

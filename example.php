@@ -27,8 +27,11 @@ $result = $ids->run();
 if (!$result->isEmpty()) {
 	// Take a look at the result object with the ips system
 	//echo $result;
-	require_once 'phpips/ips_init.inc.php';
-}
+	//require_once 'phpips/ips_init.inc.php';
+	require_once (PATH_TO_ROOT . "phpips/lib/classes/class.IpsSystem.inc.php");
+	$ips=new IpsSystem($result);
+	$ips->run();
+}	
 
 
 
