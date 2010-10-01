@@ -8,6 +8,7 @@ require_once (PATH_TO_ROOT . "phpips/lib/classes/class.IpsDebugger.inc.php");
 
 class IpsSystem {
 	private static $_instance=null;
+	protected  $_config=null;
 
 	protected $_idsResult;
 
@@ -26,9 +27,12 @@ class IpsSystem {
 	 */
 	protected $_finalAction = null;
 
-	public static function getInstance($idsResult){
-		if (self::$_instance==null)
-			self::$_instance=new IpsSystem($idsResult);
+	public static function getInstance($idsResult,$config=null){
+		if (self::$_instance==null){
+			self::$_instance=new IpsSystem($idsResult,$config);
+			
+		}
+			
 
 		return self::$_instance;
 	}
@@ -41,8 +45,9 @@ class IpsSystem {
 		$this->_actions[$name] = $command;
 	}
 
-	private function __construct(IDS_Report $idsResult) {
+	private function __construct(IDS_Report $idsResult,$config=null) {
 		$this->setIdsResult($idsResult);
+		$this->_config=$config;
 		$this->_init();
 	}
 
@@ -63,20 +68,34 @@ class IpsSystem {
 
 	private function _init() {
 		$this->__checkSession();
+		
+		var_dump($this->_config);
 		/*
 		 * Adding the actions and initialize singleton Commands.
 		 * Actions have to be added in priority order:
 		 * First added --> highest priority; last added --> lowest priority.
 		 * If tags reach thresholds for different actions, the one with highest priority is used.
 		 * Also important:
-		 * Commands 'warn', 'kick' and 'ban' exit the system after executed.
+		 * Commands 'warn', 'kick' and 'ban' exit the system after execution.
 		 * They each have to be the last array element of an action!
 		 */
-		$this->addAction("ban", array(IpsCommandFactory::createCommand("log"), IpsCommandFactory::createCommand("mail"), IpsCommandFactory::createCommand("ban")));
-		$this->addAction("kick", array(IpsCommandFactory::createCommand("log"), IpsCommandFactory::createCommand("mail"), IpsCommandFactory::createCommand("kick")));
-		//$this->addAction("mail", array(IpsCommandFactory::createCommand("log"), IpsCommandFactory::createCommand("mail")));
-		$this->addAction("warn", array(IpsCommandFactory::createCommand("log"), IpsCommandFactory::createCommand("warn")));
-		$this->addAction("log", array(IpsCommandFactory::createCommand("log")));
+		if ($this->_config==null){
+			$this->addAction("ban", array(IpsCommandFactory::createCommand("log"), IpsCommandFactory::createCommand("mail"), IpsCommandFactory::createCommand("ban")));
+			$this->addAction("kick", array(IpsCommandFactory::createCommand("log"), IpsCommandFactory::createCommand("mail"), IpsCommandFactory::createCommand("kick")));
+			//$this->addAction("mail", array(IpsCommandFactory::createCommand("log"), IpsCommandFactory::createCommand("mail")));
+			$this->addAction("warn", array(IpsCommandFactory::createCommand("log"), IpsCommandFactory::createCommand("warn")));
+			$this->addAction("log", array(IpsCommandFactory::createCommand("log")));
+		}
+		else {
+			foreach ($this->_config["actionConfig"] as $actionName=>$actionConfig){
+				
+				$commandList=array();
+				foreach ($actionConfig["commandList"] as $key=>$singleActionConfig){
+					array_push($commandList,IpsCommandFactory::createCommand($singleActionConfig));
+				}
+				$this->addAction($actionName, $commandList);
+			}
+		}
 
 		// Load thresholds for tags
 		$this->_threshold = new IpsThresholds();
@@ -229,7 +248,7 @@ class IpsSystem {
 		}
 	}
 	public function run(){
-		
+
 		if ($this->getImpact() > 1) {
 			//add each impact to sessiondata
 			foreach ($this->getTags() as $value) {
@@ -244,7 +263,7 @@ class IpsSystem {
 			}
 			//disabled debug fb($sessiondata);
 			$this->saveSessionData($this->_sessiondata);
-			
+
 		}
 
 		if ($this->checkSessionImpact()) {

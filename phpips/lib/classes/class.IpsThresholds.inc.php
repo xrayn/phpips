@@ -16,33 +16,37 @@ class IpsThresholds {
 	 * DT -> Directory traversal
 	 */
 	// setup default values
+	/*
+	 * @lookhere: has to be dynamically initialized
+	 * 
+	 */
 	protected $_threshold = array(
 				"sqli" => array(
-						"log" => 5, "warn" => 10, "kick" => 20, "ban" => 50
+						"logAction" => 5, "warnAction" => 10, "kickAction" => 20, "banAction" => 50
 						),
 				"xss" => array(
-						"log" => 5, "warn" => 20, "kick" => 30, "ban" => 50
+						"logAction" => 5, "warnAction" => 20, "kickAction" => 30, "banAction" => 50
 						),
 				"rce" => array(
-						"log" => 10, "warn" => 20, "kick" => 30, "ban" => 50
+						"logAction" => 10, "warnAction" => 20, "kickAction" => 30, "banAction" => 50
 						),
 				"dos" => array(
-						"log" => 10, "warn" => 20, "kick" => 30, "ban" => 50
+						"logAction" => 10, "warnAction" => 20, "kickAction" => 30, "banAction" => 50
 						),
 				"csrf" => array(
-						"log" => 10, "warn" => 20, "kick" => 30, "ban" => 50
+						"logAction" => 10, "warnAction" => 20, "kickAction" => 30, "banAction" => 50
 						),
 				"id" => array(
-						"log" => 10, "warn" => 20, "kick" => 30, "ban" => 50
+						"logAction" => 10, "warnAction" => 20, "kickAction" => 30, "banAction" => 50
 						),
 				"lfi" => array(
-						"log" => 10, "warn" => 20, "kick" => 30, "ban" => 50
+						"logAction" => 10, "warnAction" => 20, "kickAction" => 30, "banAction" => 50
 						),
 				"rfe" => array(
-						"log" => 10, "warn" => 20, "kick" => 30, "ban" => 50
+						"logAction" => 10, "warnAction" => 20, "kickAction" => 30, "banAction" => 50
 						),
 				"dt" => array(
-						"log" => 10, "warn" => 20, "kick" => 30, "ban" => 50
+						"logAction" => 10, "warnAction" => 20, "kickAction" => 30, "banAction" => 50
 						)
 			);
 
@@ -139,12 +143,12 @@ class IpsThresholds {
 				case "":
 					$highestAction = $action;
 					break;
-				case "log":
-					if ($action == "warn" || $action == "kick")
+				case "logAction":
+					if ($action == "warnAction" || $action == "kickAction")
 						$highestAction = $action;
 					break;
 				case "warn":
-					if ($action == "kick")
+					if ($action == "kickAction")
 						$highestAction = $action;
 					break;
 			}
