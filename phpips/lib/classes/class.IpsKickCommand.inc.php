@@ -28,6 +28,7 @@ class IpsKickCommand extends IpsCommandAbstract {
 	protected function realExecute() {
 		
 			IpsDebugger::debug(array("executed Kick Command"=>$this->_data));
+			IpsDebugger::debug(array("CALLED REALEXECUTE"=>$this));
 			global $db, $settings, $phpids_settings;
 			
 //			$actTime = time();

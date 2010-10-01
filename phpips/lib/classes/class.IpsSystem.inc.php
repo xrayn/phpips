@@ -98,7 +98,7 @@ class IpsSystem {
 		}
 
 		// Load thresholds for tags
-		$this->_threshold = new IpsThresholds();
+		$this->_threshold = new IpsThresholds($this->_config);
 
 		// we need this for logging/action information
 		if (!isset($_SESSION["IDSDATA"])) {

@@ -3,6 +3,8 @@
 
 class IpsThresholds {
 
+
+	private $_config=null;
 	/**
 	 * Current Tags from PHPIds
 	 * SQLI -> SQL Injection
@@ -17,42 +19,16 @@ class IpsThresholds {
 	 */
 	// setup default values
 	/*
-	 * @lookhere: has to be dynamically initialized
-	 * 
-	 */
-	protected $_threshold = array(
-				"sqli" => array(
-						"logAction" => 5, "warnAction" => 10, "kickAction" => 20, "banAction" => 50
-						),
-				"xss" => array(
-						"logAction" => 5, "warnAction" => 20, "kickAction" => 30, "banAction" => 50
-						),
-				"rce" => array(
-						"logAction" => 10, "warnAction" => 20, "kickAction" => 30, "banAction" => 50
-						),
-				"dos" => array(
-						"logAction" => 10, "warnAction" => 20, "kickAction" => 30, "banAction" => 50
-						),
-				"csrf" => array(
-						"logAction" => 10, "warnAction" => 20, "kickAction" => 30, "banAction" => 50
-						),
-				"id" => array(
-						"logAction" => 10, "warnAction" => 20, "kickAction" => 30, "banAction" => 50
-						),
-				"lfi" => array(
-						"logAction" => 10, "warnAction" => 20, "kickAction" => 30, "banAction" => 50
-						),
-				"rfe" => array(
-						"logAction" => 10, "warnAction" => 20, "kickAction" => 30, "banAction" => 50
-						),
-				"dt" => array(
-						"logAction" => 10, "warnAction" => 20, "kickAction" => 30, "banAction" => 50
-						)
-			);
+	* @lookhere: has to be dynamically initialized
+	*
+	*/
+	protected $_tags=array("sqli","xss","rce","dos","csrf","id","lfi","rfe","dt");
 
-	public function __construct() {
-		//init thresholds from db
+	protected $_threshold = null;
+
+	public function __construct($config=null) {
 		try {
+			$this->_config=$config;
 			$this->_initThreshholds();
 		} catch (Exception $e) {
 			echo $e->getMessage();
@@ -65,24 +41,17 @@ class IpsThresholds {
 	 * @throws Exception
 	 */
 	private function _initThreshholds() {
-//		global $phpids_settings;
-//		
-//		/* countermeasure types */
-//		$cm_types = array("log", "warn", "kick", "ban");
-//		
-//		/* initialize thresholds by setting values */
-//		foreach ($this->_threshold as $type => $thresholds) {
-//			if (empty($phpids_settings["ips_threshold_" . $type])) {
-//				throw new Exception("Thresholds for $type not found in settings!");
-//			} else {
-//				$settings_thresholds = explode(",", $phpids_settings["ips_threshold_" . $type]);
-//				foreach ($cm_types as $i => $cm_type) {
-//					$this->_threshold[$type][$cm_type] = intval(trim($settings_thresholds[$i]));
-//				}
-//			}
-//		}
-//		
-	/* echo "<pre>";print_r($this->_threshold);echo "<pre>"; */
+		$this->_threshold=array();
+		IpsDebugger::debug($this->_config);
+		foreach ($this->_config["actionConfig"] as $actionName=>$actionConfig){
+			
+			$configThreshold=$actionConfig["thresholds"];
+		
+			foreach ($this->_tags as $tagName){
+				$this->_threshold[$tagName][$actionName]=$configThreshold[$tagName];
+			}
+		}
+		IpsDebugger::debug($this->_threshold);
 	}
 
 	/**
@@ -95,6 +64,7 @@ class IpsThresholds {
 		if (array_key_exists($vectorname, $this->_threshold)) {
 			return $this->_threshold[$vectorname];
 		} else {
+			IpsDebugger::debug($this);
 			throw new Exception("no such threshold found");
 		}
 	}
@@ -122,9 +92,9 @@ class IpsThresholds {
 		}
 		//disabled debug fb(array("vector: ".$vectorname." vectorvalue: ".$vectorvalue." LAST ACTION=>".$lastAction));
 		return array("vectorname" => $vectorname, "vectorvalue" => $vectorvalue, "lastaction" => $lastAction);
-	
+
 	}
-	
+
 	/**
 	 * evalueates the the give intrusion, which mostly have diff tags and
 	 * each tag has diff thresholds. gives the highest action which they
@@ -132,28 +102,28 @@ class IpsThresholds {
 	 * @param array $vectorList with the particular tags of a intrusion
 	 * @param int $vectorvalue impact value
 	 * @return string highest action
+	 * @deprecated is not used!
 	 */
 	public function evaluateIntrusion ($vectorList, $vectorvalue) {
-		/*
-		 * @lookhere: hardcoded, has to by dynamic
-		 * 
-		 */
+		throw new Exception("Deprecated method, isnt used in the system. Is hardcoded anyway");
+		die();
+		IpsDebugger::debug(array("evaluateIntrusion"=>$vectorList));
 		$highestAction = "";
 		foreach ($vectorList as $vectorname) {
 			$maxHit = $this->getMaxThresholdHit ($vectorname, $vectorvalue);
 			$action = $maxHit["lastaction"];
-			
+
 			switch ($highestAction) {
 				case "":
 					$highestAction = $action;
 					break;
 				case "logAction":
 					if ($action == "warnAction" || $action == "kickAction")
-						$highestAction = $action;
+					$highestAction = $action;
 					break;
-				case "warn":
+				case "warnAction":
 					if ($action == "kickAction")
-						$highestAction = $action;
+					$highestAction = $action;
 					break;
 			}
 		}
