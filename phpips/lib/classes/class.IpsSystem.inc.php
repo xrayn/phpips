@@ -7,6 +7,7 @@ require_once (PATH_TO_ROOT . "phpips/lib/classes/class.IpsDebugger.inc.php");
 
 
 class IpsSystem {
+	private static $_instance=null;
 
 	protected $_idsResult;
 
@@ -25,6 +26,12 @@ class IpsSystem {
 	 */
 	protected $_finalAction = null;
 
+	public static function getInstance($idsResult){
+		if (self::$_instance==null)
+			self::$_instance=new IpsSystem($idsResult);
+
+		return self::$_instance;
+	}
 	/**
 	 * @param String $name
 	 * @param array of (IpsCommand $command)
@@ -34,7 +41,7 @@ class IpsSystem {
 		$this->_actions[$name] = $command;
 	}
 
-	public function __construct(IDS_Report $idsResult) {
+	private function __construct(IDS_Report $idsResult) {
 		$this->setIdsResult($idsResult);
 		$this->_init();
 	}

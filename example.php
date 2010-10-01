@@ -29,7 +29,7 @@ if (!$result->isEmpty()) {
 	//echo $result;
 	//require_once 'phpips/ips_init.inc.php';
 	require_once (PATH_TO_ROOT . "phpips/lib/classes/class.IpsSystem.inc.php");
-	$ips=new IpsSystem($result);
+	$ips=IpsSystem::getInstance($result);
 	$ips->run();
 }	
 
