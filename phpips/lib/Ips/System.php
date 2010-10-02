@@ -11,7 +11,7 @@ class Ips_System {
 	
 	/**
 	 * 
-	 * @var IpsRegistry
+	 * @var Ips_Registry
 	 */
 	protected $_registry=null;
 
@@ -150,7 +150,8 @@ class Ips_System {
 
 		foreach($this->_actions as $key => $commands){
 			foreach($commands as $command){
-				if($phpids_settings['simulation_activated']) {
+				if($this->_registry->isSimulationEnabled()) {
+					Ips_Debugger::debug("SIMULATION MODE");
 					if($command->simulate()) {
 						return;		//Exit IPS, but not rest of script
 					}

@@ -1,6 +1,5 @@
 <?php
-$phpids_settings["debug_activated"]=true;
-$phpids_settings['simulation_activated']=false;
+
 
 define("PATH_TO_ROOT", "/var/www/eclipse-workspaces/eclipse_helios/php-ips/" );
 set_include_path  (PATH_TO_ROOT."phpids-0.6.4/lib/");
@@ -34,7 +33,7 @@ if (!$result->isEmpty()) {
 	
 	require_once (PATH_TO_ROOT . "phpips/lib/Ips/Init.php");
 	
-	$IpsInit=Ips_Init::getInstance();
+	$IpsInit=Ips_Init::init();
 	//$IpsConfig=IpsConfigurationFactory::createConfig("ini",PATH_TO_ROOT."phpips/lib/Config/ActionConfig.ini");
 	$ips=Ips_System::getInstance($result);
 	$ips->run();

@@ -3,7 +3,7 @@
 class Ips_Registry {
 	/**
 	 *
-	 * @var IpsRegistry
+	 * @var Ips_Registry
 	 */
 	private static $_instance=null;
 
