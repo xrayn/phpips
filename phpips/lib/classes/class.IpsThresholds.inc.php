@@ -8,7 +8,7 @@ class IpsThresholds {
 	 * 
 	 * @var IpsConfiguration
 	 */
-	private $configurationObject=null;
+	private $_actionConfiguration=null;
 	/**
 	 * Current Tags from PHPIds
 	 * SQLI -> SQL Injection
@@ -29,10 +29,16 @@ class IpsThresholds {
 	protected $_tags=array("sqli","xss","rce","dos","csrf","id","lfi","rfe","dt");
 
 	protected $_threshold = null;
-
-	public function __construct($configurationObject=null) {
+	/**
+	 * 
+	 * @var IpsRegistry
+	 */
+	protected $_registry=null;
+	
+	public function __construct() {
+		$this->_registry=IpsRegistry::getInstance();
+		$this->_actionConfiguration=$this->_registry->getActionConfiguration();
 		try {
-			$this->_configurationObject=$configurationObject;
 			$this->_initThreshholds();
 		} catch (Exception $e) {
 			echo $e->getMessage();
@@ -46,8 +52,8 @@ class IpsThresholds {
 	 */
 	private function _initThreshholds() {
 		$this->_threshold=array();
-		IpsDebugger::debug($this->_configurationObject);
-		foreach ($this->_configurationObject->getActionConfig()  as $actionName=>$actionConfig){
+		IpsDebugger::debug($this->_actionConfiguration);
+		foreach ($this->_actionConfiguration->getActionConfig()  as $actionName=>$actionConfig){
 			
 			$configThreshold=$actionConfig["thresholds"];
 		

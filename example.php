@@ -32,11 +32,11 @@ if (!$result->isEmpty()) {
 	//require_once 'phpips/ips_init.inc.php';
 	require_once (PATH_TO_ROOT . "phpips/lib/classes/class.IpsConfigurationFactory.php");
 	require_once (PATH_TO_ROOT . "phpips/lib/classes/class.IpsSystem.inc.php");
+	require_once (PATH_TO_ROOT . "phpips/lib/classes/class.IpsInit.inc.php");
 	
-	$IpsConfig=IpsConfigurationFactory::createConfig("ini",PATH_TO_ROOT."phpips/lib/Config/ActionConfig.ini");
-
-	IpsDebugger::debug($IpsConfig);
-	$ips=IpsSystem::getInstance($result,$IpsConfig);
+	$IpsInit=IpsInit::getInstance();
+	//$IpsConfig=IpsConfigurationFactory::createConfig("ini",PATH_TO_ROOT."phpips/lib/Config/ActionConfig.ini");
+	$ips=IpsSystem::getInstance($result);
 	$ips->run();
 }
 

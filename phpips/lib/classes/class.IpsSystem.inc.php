@@ -12,7 +12,13 @@ class IpsSystem {
 	 * 
 	 * @var IpsConfiguration
 	 */
-	protected  $_configurationObject=null;
+	protected  $_ActionConfiguration=null;
+	
+	/**
+	 * 
+	 * @var IpsRegistry
+	 */
+	protected $_registry=null;
 
 	protected $_idsResult;
 
@@ -31,9 +37,9 @@ class IpsSystem {
 	 */
 	protected $_finalAction = null;
 
-	public static function getInstance($idsResult,$configurationObject){
+	public static function getInstance($idsResult){
 		if (self::$_instance==null){
-			self::$_instance=new IpsSystem($idsResult,$configurationObject);
+			self::$_instance=new IpsSystem($idsResult);
 		}
 			
 
@@ -48,9 +54,11 @@ class IpsSystem {
 		$this->_actions[$name] = $command;
 	}
 
-	private function __construct(IDS_Report $idsResult, IpsConfigurationAbstract $configurationObject) {
+	private function __construct(IDS_Report $idsResult) {
+		//init the registry!
+		$this->_registry=IpsRegistry::getInstance();
 		$this->setIdsResult($idsResult);
-		$this->_configurationObject=$configurationObject;
+		$this->_ActionConfiguration=$this->_registry->getActionConfiguration();
 		$this->_init();
 	}
 
@@ -81,7 +89,7 @@ class IpsSystem {
 		 * Commands 'warn', 'kick' and 'ban' exit the system after execution.
 		 * They each have to be the last array element of an action!
 		 */
-		if ($this->_configurationObject==null){
+		if ($this->_ActionConfiguration==null){
 			throw new Exception("Obsolete!!!");
 			$this->addAction("ban", array(IpsCommandFactory::createCommand("log"), IpsCommandFactory::createCommand("mail"), IpsCommandFactory::createCommand("ban")));
 			$this->addAction("kick", array(IpsCommandFactory::createCommand("log"), IpsCommandFactory::createCommand("mail"), IpsCommandFactory::createCommand("kick")));
@@ -90,7 +98,7 @@ class IpsSystem {
 			$this->addAction("log", array(IpsCommandFactory::createCommand("log")));
 		}
 		else {
-			foreach ($this->_configurationObject->getActionConfig() as $actionName=>$actionConfig){
+			foreach ($this->_ActionConfiguration->getActionConfig() as $actionName=>$actionConfig){
 				
 				$commandList=array();
 				foreach ($actionConfig["commandList"] as $key=>$singleActionConfig){
@@ -101,7 +109,7 @@ class IpsSystem {
 		}
 
 		// Load thresholds for tags
-		$this->_threshold = new IpsThresholds($this->_configurationObject);
+		$this->_threshold = new IpsThresholds();
 
 		// we need this for logging/action information
 		if (!isset($_SESSION["IDSDATA"])) {
