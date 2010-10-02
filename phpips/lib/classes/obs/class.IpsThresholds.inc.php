@@ -32,7 +32,7 @@ class IpsThresholds {
 	protected $_registry=null;
 	
 	public function __construct() {
-		$this->_registry=IpsRegistry::getInstance();
+		$this->_registry=Ips_Registry::getInstance();
 		$this->_actionConfiguration=$this->_registry->getActionConfiguration();
 		$this->_tags=$this->_registry->getTags();
 		try {

@@ -14,7 +14,7 @@ abstract class IpsCommandAbstract implements IpsCommand {
 	}
 
 	protected function __construct() {
-		$this->_registry=IpsRegistry::getInstance();
+		$this->_registry=Ips_Registry::getInstance();
 	}
 
 	public function addData($data) {

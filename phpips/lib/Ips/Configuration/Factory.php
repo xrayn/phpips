@@ -1,12 +1,12 @@
 <?php
-class IpsConfigurationFactory {
+class Ips_Configuration_Factory {
 
 	public static function createConfig($configType=null, $options=array()){
 
 		switch ($configType){
 			case "ini":
-				require_once 'phpips/lib/classes/class.IpsConfigurationIni.inc.php';
-				$configObject=new IpsConfigurationIni($options["path"]);
+				
+				$configObject=new Ips_Configuration_Ini($options["path"]);
 				$configObject->initActionConfig($options["path"]);
 				return $configObject;
 				break;

@@ -1,7 +1,7 @@
 <?php
-require_once 'phpips/lib/classes/class.IpsConfigurationAbstract.inc.php';
 
-class IpsConfigurationIni extends IpsConfigurationAbstract{
+
+class Ips_Configuration_Ini extends Ips_Configuration_Abstract{
 
 
 	public function initActionConfig($path=null){

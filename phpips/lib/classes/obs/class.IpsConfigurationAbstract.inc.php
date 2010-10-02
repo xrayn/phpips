@@ -4,11 +4,10 @@ abstract class IpsConfigurationAbstract {
 
 	protected $_config=array();
 	const ACTION_CONFIG_NAME="ActionConfig";
-
+	
 	
 	public function __construct($path=null, $options=null){
-
-		$this->_config[self::ACTION_CONFIG_NAME]=array();
+		$this->_config[self::SIMULATION_CONFIG_MODE]=false;
 	}
 
 	abstract public function initActionConfig($path=null);

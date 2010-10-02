@@ -1,6 +1,5 @@
 <?php
-require_once 'phpips/lib/classes/class.IpsRegistry.inc.php';
-
+require_once "phpips/lib/IpsClassLoader.php";
 
 class IpsInit {
 	private static $_instance=null;
@@ -13,6 +12,8 @@ class IpsInit {
 	}
 	
 	protected function __construct(){
+		//first of all load autoloader
+		spl_autoload_register(array("IpsClassLoader","autoload"));
 	
 		$this->__init();
 	
@@ -22,7 +23,7 @@ class IpsInit {
 
 	protected function __init(){
 		//create new Registry instance!
-		$registry=IpsRegistry::getInstance();
+		$registry=Ips_Registry::getInstance();
 		
 		//load configuration
 		// later do this from an ini file!

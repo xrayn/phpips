@@ -1,6 +1,6 @@
 <?php
 
-class IpsRegistry {
+class Ips_Registry {
 	/**
 	 *
 	 * @var IpsRegistry
@@ -24,7 +24,7 @@ class IpsRegistry {
 	}
 	public static function getInstance(){
 		if (self::$_instance==null)
-		self::$_instance=new IpsRegistry();
+		self::$_instance=new Ips_Registry();
 
 		return self::$_instance;
 	}
@@ -46,7 +46,7 @@ class IpsRegistry {
 	public function getTags(){
 		return $this->_values[self::KEY_TAG_NAMES];
 	}
-	public function setActionConfiguration(IpsConfigurationAbstract $config){
+	public function setActionConfiguration(Ips_Configuration_Abstract $config){
 		$this->_values[self::KEY_CONFIGURATION]=$config;
 		return $this;
 	}

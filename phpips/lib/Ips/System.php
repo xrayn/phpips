@@ -1,12 +1,7 @@
 <?php
 
 
-require_once (PATH_TO_ROOT . "phpips/lib/classes/class.IpsThresholds.inc.php");
-require_once (PATH_TO_ROOT . "phpips/lib/classes/class.IpsCommandFactory.inc.php");
-require_once (PATH_TO_ROOT . "phpips/lib/classes/class.IpsDebugger.inc.php");
-
-
-class IpsSystem {
+class Ips_System {
 	private static $_instance=null;
 	/**
 	 * 
@@ -39,7 +34,7 @@ class IpsSystem {
 
 	public static function getInstance($idsResult){
 		if (self::$_instance==null){
-			self::$_instance=new IpsSystem($idsResult);
+			self::$_instance=new Ips_System($idsResult);
 		}
 			
 
@@ -56,9 +51,10 @@ class IpsSystem {
 
 	private function __construct(IDS_Report $idsResult) {
 		//init the registry!
-		$this->_registry=IpsRegistry::getInstance();
+		$this->_registry=Ips_Registry::getInstance();
 		$this->setIdsResult($idsResult);
 		$this->_ActionConfiguration=$this->_registry->getActionConfiguration();
+		
 		$this->_init();
 	}
 
@@ -102,14 +98,16 @@ class IpsSystem {
 				
 				$commandList=array();
 				foreach ($actionConfig["commandList"] as $key=>$singleActionConfig){
-					array_push($commandList,IpsCommandFactory::createCommand($singleActionConfig));
+					
+					array_push($commandList,Ips_Command_Factory::createCommand($singleActionConfig));
+					
 				}
 				$this->addAction($actionName, $commandList);
 			}
 		}
 
 		// Load thresholds for tags
-		$this->_threshold = new IpsThresholds();
+		$this->_threshold = new Ips_Threshold();
 
 		// we need this for logging/action information
 		if (!isset($_SESSION["IDSDATA"])) {
@@ -120,7 +118,7 @@ class IpsSystem {
 			$_SESSION["IPSDATA"] = array();
 		}
 
-		IpsDebugger::debug(array("Object initialized"=>$_SESSION["IPSDATA"]));
+		Ips_Debugger::debug(array("Object initialized"=>$_SESSION["IPSDATA"]));
 		$this->_sessiondata = $_SESSION["IPSDATA"];
 	}
 
@@ -173,8 +171,8 @@ class IpsSystem {
 	 *
 	 */
 	private function checkSessionImpact() {
-		IpsDebugger::debug("checkSessionImpact");
-		IpsDebugger::debug(array("THIS SESSION DATA"=>$this->_sessiondata));
+		Ips_Debugger::debug("checkSessionImpact");
+		Ips_Debugger::debug(array("THIS SESSION DATA"=>$this->_sessiondata));
 		foreach ($this->_sessiondata as $key => $value) {
 			// should be switch case later when we have the matrix
 			//$this->actionResolver($this->_threshold->getMaxThresholdHit($key,$value));
@@ -242,8 +240,8 @@ class IpsSystem {
 	private function saveSessionData($sessiondata) {
 		$_SESSION["IPSDATA"] = $sessiondata;
 		$this->_sessiondata = $sessiondata;
-		IpsDebugger::debug("SAVE SESSION DATA!!!!");
-		IpsDebugger::debug(array("SAVE SESSION DATA"=>$_SESSION["IPSDATA"]));
+		Ips_Debugger::debug("SAVE SESSION DATA!!!!");
+		Ips_Debugger::debug(array("SAVE SESSION DATA"=>$_SESSION["IPSDATA"]));
 	}
 
 	/**
@@ -278,7 +276,7 @@ class IpsSystem {
 		}
 
 		if ($this->checkSessionImpact()) {
-			IpsDebugger::debug("Checking session Impact");
+			Ips_Debugger::debug("Checking session Impact");
 			// one or more impacts in session reached critical value
 
 			// Enable commands to each last action
