@@ -2,7 +2,7 @@
 
 class IpsRegistry {
 	/**
-	 * 
+	 *
 	 * @var IpsRegistry
 	 */
 	private static $_instance=null;
@@ -12,11 +12,13 @@ class IpsRegistry {
 	const KEY_SIMULATION_CONFIG_MODE="SimulationMode";
 	const KEY_DEBUGGER_CONFIG_MODE="DebuggerMode";
 	const KEY_CONFIGURATION="ActionConfiguration";
+	const KEY_TAG_NAMES = "TagNames";
 
 	protected function __construct() {
+		//set default values
 		$this->_values[self::KEY_DEBUGGER_CONFIG_MODE]=false;
 		$this->_values[self::KEY_SIMULATION_CONFIG_MODE]=true;
-
+		$this->_values[self::KEY_TAG_NAMES]=array("sqli","xss","rce","dos","csrf","id","lfi","rfe","dt");
 	}
 	private function __clone(){
 	}
@@ -31,10 +33,19 @@ class IpsRegistry {
 		$this->_values[$key]=$value;
 		return $this;
 	}
-//	protected function get($key){
-//		return $this->_values[$key];
-//	}
-
+	//	protected function get($key){
+	//		return $this->_values[$key];
+	//	}
+	public function setTags($tags=null){
+		if ($tags!=null && is_array($tags)){
+			//if null setup all tags
+			$this->_values[self::KEY_TAG_NAMES]=$tags;
+		}
+		return $this;
+	}
+	public function getTags(){
+		return $this->_values[self::KEY_TAG_NAMES];
+	}
 	public function setActionConfiguration(IpsConfigurationAbstract $config){
 		$this->_values[self::KEY_CONFIGURATION]=$config;
 		return $this;
@@ -42,7 +53,7 @@ class IpsRegistry {
 	public function getActionConfiguration(){
 		return $this->_values[self::KEY_CONFIGURATION];
 	}
-	
+
 	public function enableDebug(){
 		$this->_values[self::KEY_DEBUGGER_CONFIG_MODE]=true;
 		return $this;

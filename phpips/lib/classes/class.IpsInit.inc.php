@@ -28,6 +28,7 @@ class IpsInit {
 		// later do this from an ini file!
 		$IpsActionConfig=IpsConfigurationFactory::createConfig("ini",PATH_TO_ROOT."phpips/lib/Config/ActionConfig.ini");
 		$registry->setActionConfiguration($IpsActionConfig);
+		$registry->setTags(array("sqli","xss","rce","dos","csrf","id","lfi","rfe","dt"));
 	}
 
 

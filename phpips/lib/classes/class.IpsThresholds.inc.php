@@ -21,12 +21,8 @@ class IpsThresholds {
 	 * RFE -> Remote file execution
 	 * DT -> Directory traversal
 	 */
-	// setup default values
-	/*
-	* @lookhere: has to be dynamically initialized
-	*
-	*/
-	protected $_tags=array("sqli","xss","rce","dos","csrf","id","lfi","rfe","dt");
+
+	protected $_tags=null;
 
 	protected $_threshold = null;
 	/**
@@ -38,6 +34,7 @@ class IpsThresholds {
 	public function __construct() {
 		$this->_registry=IpsRegistry::getInstance();
 		$this->_actionConfiguration=$this->_registry->getActionConfiguration();
+		$this->_tags=$this->_registry->getTags();
 		try {
 			$this->_initThreshholds();
 		} catch (Exception $e) {

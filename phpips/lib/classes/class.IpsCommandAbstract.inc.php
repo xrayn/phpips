@@ -6,6 +6,7 @@ abstract class IpsCommandAbstract implements IpsCommand {
 	//private static $_instance=null;
 	protected $_isExecuted=false;
 	protected $_execute=false;
+	protected $_registry=null;
 
 	public function enableExecute() {
 		$this->_execute=true;
@@ -13,6 +14,7 @@ abstract class IpsCommandAbstract implements IpsCommand {
 	}
 
 	protected function __construct() {
+		$this->_registry=IpsRegistry::getInstance();
 	}
 
 	public function addData($data) {
