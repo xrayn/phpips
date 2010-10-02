@@ -4,7 +4,11 @@
 class IpsThresholds {
 
 
-	private $_config=null;
+	/**
+	 * 
+	 * @var IpsConfiguration
+	 */
+	private $configurationObject=null;
 	/**
 	 * Current Tags from PHPIds
 	 * SQLI -> SQL Injection
@@ -26,9 +30,9 @@ class IpsThresholds {
 
 	protected $_threshold = null;
 
-	public function __construct($config=null) {
+	public function __construct($configurationObject=null) {
 		try {
-			$this->_config=$config;
+			$this->_configurationObject=$configurationObject;
 			$this->_initThreshholds();
 		} catch (Exception $e) {
 			echo $e->getMessage();
@@ -42,8 +46,8 @@ class IpsThresholds {
 	 */
 	private function _initThreshholds() {
 		$this->_threshold=array();
-		IpsDebugger::debug($this->_config);
-		foreach ($this->_config["actionConfig"] as $actionName=>$actionConfig){
+		IpsDebugger::debug($this->_configurationObject);
+		foreach ($this->_configurationObject->getActionConfig()  as $actionName=>$actionConfig){
 			
 			$configThreshold=$actionConfig["thresholds"];
 		

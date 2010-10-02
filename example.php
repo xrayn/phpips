@@ -30,11 +30,13 @@ if (!$result->isEmpty()) {
 	// Take a look at the result object with the ips system
 	//echo $result;
 	//require_once 'phpips/ips_init.inc.php';
+	require_once (PATH_TO_ROOT . "phpips/lib/classes/class.IpsConfigurationFactory.php");
 	require_once (PATH_TO_ROOT . "phpips/lib/classes/class.IpsSystem.inc.php");
 	
-	$phpids_settings["actionConfig"]=parse_ini_file(PATH_TO_ROOT."phpips/lib/Config/ActionConfig.ini",TRUE);
-	IpsDebugger::debug($phpids_settings);
-	$ips=IpsSystem::getInstance($result,$phpids_settings);
+	$IpsConfig=IpsConfigurationFactory::createConfig("ini",PATH_TO_ROOT."phpips/lib/Config/ActionConfig.ini");
+
+	IpsDebugger::debug($IpsConfig);
+	$ips=IpsSystem::getInstance($result,$IpsConfig);
 	$ips->run();
 }
 
