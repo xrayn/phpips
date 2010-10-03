@@ -15,6 +15,7 @@ class Ips_Registry {
 	const KEY_TAG_NAMES = "TagNames";
 	const KEY_COMMAND_MODULE_NAME="CommandsModuleName";
 	const KEY_USE_CUSTOM_COMMANDS="UseCustomCommands";
+	const KEY_ADDITIONAL_COMMAND_CONFIG="AdditionalCommandConfig";
 
 	protected function __construct() {
 		//set default values
@@ -23,6 +24,7 @@ class Ips_Registry {
 		$this->_values[self::KEY_TAG_NAMES]=array("sqli","xss","rce","dos","csrf","id","lfi","rfe","dt");
 		$this->_values[self::KEY_USE_CUSTOM_COMMANDS]=false;
 		$this->_values[self::KEY_COMMAND_MODULE_NAME]="Default";
+		$this->_values[self::KEY_ADDITIONAL_COMMAND_CONFIG]=array();
 
 	}
 	private function __clone(){
@@ -32,6 +34,39 @@ class Ips_Registry {
 		self::$_instance=new Ips_Registry();
 
 		return self::$_instance;
+	}
+
+	public function addCommandConfigValue($key,$value){
+		$this->_values[self::KEY_ADDITIONAL_COMMAND_CONFIG][$key]=$value;
+		return $this;
+	}
+	/**
+	 * Get the config of the Command
+	 *
+	 * If $commandName is null, return complete CommandConfig
+	 * If $key==null, return complete Array of CommandName
+	 * @param string $commandName
+	 * @param string $key
+	 * @throws Exception
+	 * @return mixed. Can be anything
+	 */
+	public function getCommandConfigFrom($commandName=null,$key=null){
+		if ($commandName===null){
+			return	$this->_values[self::KEY_ADDITIONAL_COMMAND_CONFIG];
+		}
+		else {
+			$configPointer=&$this->_values[self::KEY_ADDITIONAL_COMMAND_CONFIG][$commandName];
+		}
+		if ($key===null){
+			return $configPointer;
+		}
+		else if (isset($configPointer[$key])){
+			return $configPointer[$key];
+		}
+		else {
+			throw new Exception("REGISTRY: Key".$key." not found in ".self::KEY_ADDITIONAL_COMMAND_CONFIG);
+		}
+
 	}
 
 	protected function set($key,$value){
@@ -55,15 +90,15 @@ class Ips_Registry {
 		} else {
 			$this->_values[self::KEY_USE_CUSTOM_COMMANDS]=false;
 		}
-			
+
 		$this->_values[self::KEY_COMMAND_MODULE_NAME]=$moduleName;
 		return $this;
 	}
 	/**
 	 * This is used in the factory which creates the commands
 	 * The factory get a Command Name as a Value and loads the apropriate Class and the singleton Object.
-	 * 
-	 * 
+	 *
+	 *
 	 * @return string
 	 */
 	public function getCommandModulePrefix() {

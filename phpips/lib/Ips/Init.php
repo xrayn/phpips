@@ -6,7 +6,7 @@ class Ips_Init {
 	private static $_instance=null;
 	protected $_configFile=null;
 	/**
-	 * 
+	 *
 	 * @var Ips_Registry
 	 */
 	protected $_registry=null;
@@ -56,11 +56,11 @@ class Ips_Init {
 		//readin configuration
 
 		/*
-		 * 
+		 *
 		 * caution here, the order is significant. some things must be loaded before
 		 * another. e.g. Command Prefix Path must be set earlier than ActionConfig, cause this one loads
 		 * Command Classes
-		 * 
+		 *
 		 */
 		$config_array=parse_ini_file($this->_configFile,true);
 
@@ -79,19 +79,19 @@ class Ips_Init {
 		if ($config_array["BaseConfig"]["DefinedTags"]!=""){
 			$this->_registry->setTags(explode(",", strtolower($config_array["BaseConfig"]["DefinedTags"])));
 		}
-		
+
 		if ($config_array["BaseConfig"]["UseCustomCommands"]=="On"){
 			if ($config_array["BaseConfig"]["CustomCommandModuleName"]==""){
-				// if this is not set use Default Module instead 
+				// if this is not set use Default Module instead
 				$this->_registry->disableCustomCommands();
-			
+					
 			}
 			else {
 				$this->_registry->setCommandModule($config_array["BaseConfig"]["CustomCommandModuleName"]);
 			}
 		}
-		
-		
+
+
 		else {
 			$this->_registry->setTags(array("sqli","xss","rce","dos","csrf","id","lfi","rfe","dt"));
 		}
@@ -102,7 +102,11 @@ class Ips_Init {
 			$this->_parseActionConfig($config_array["BaseConfig"]["ActionConfig"]);
 		}
 
+		//handle the CommandConfig in seperate method
 
+		if (isset($config_array["CommandConfig"])){
+			$this->_parseCommandConfig($config_array["CommandConfig"]);
+		}
 
 		Ips_Debugger::debug($this->_registry);
 
@@ -126,6 +130,17 @@ class Ips_Init {
 		}
 		Ips_Debugger::debug($actionConfig);
 
+	}
+
+	/**
+	 * Add all key=>value pairs found in the config.
+	 * This is used to configure variables which should be accessed in the commands l8ter.
+	 * @param unknown_type $commandConfig
+	 */
+	protected function _parseCommandConfig($commandConfig){
+		foreach ($commandConfig as $name=>$value){
+			$this->_registry->addCommandConfigValue($name,$value);
+		}
 	}
 
 }
