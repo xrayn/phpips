@@ -141,6 +141,7 @@ class Ips_Init {
 		foreach ($commandConfig as $name=>$value){
 			$this->_registry->addCommandConfigValue($name,$value);
 		}
+		//var_dump($this->_registry->getCommandConfigFrom(""));
 	}
 
 }

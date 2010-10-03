@@ -55,7 +55,12 @@ class Ips_Registry {
 			return	$this->_values[self::KEY_ADDITIONAL_COMMAND_CONFIG];
 		}
 		else {
-			$configPointer=&$this->_values[self::KEY_ADDITIONAL_COMMAND_CONFIG][$commandName];
+			if (isset($this->_values[self::KEY_ADDITIONAL_COMMAND_CONFIG][$commandName])){
+				$configPointer=&$this->_values[self::KEY_ADDITIONAL_COMMAND_CONFIG][$commandName];
+			}
+			else {
+				throw new Exception("REGISTRY: Command [".$commandName."] not found in ".self::KEY_ADDITIONAL_COMMAND_CONFIG);
+			}
 		}
 		if ($key===null){
 			return $configPointer;
