@@ -64,7 +64,7 @@ class Ips_Registry {
 			return $configPointer[$key];
 		}
 		else {
-			throw new Exception("REGISTRY: Key".$key." not found in ".self::KEY_ADDITIONAL_COMMAND_CONFIG);
+			throw new Exception("REGISTRY: Key [".$key."] not found in ".self::KEY_ADDITIONAL_COMMAND_CONFIG);
 		}
 
 	}
