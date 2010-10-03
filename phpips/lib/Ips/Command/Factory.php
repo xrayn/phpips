@@ -11,14 +11,18 @@ class Ips_Command_Factory{
 	 * @throws Exception
 	 * @return IpsCommandAbstract
 	 */
-	public static function createCommand($commandName){
+	public static function createCommand($commandName, $prefix="Custom_Command_Module_Test"){
 
 		//format the commandname to match our layout
 		$commandName=strtolower($commandName);
 		$firstChar=strtoupper(substr($commandName,0,1));
 		//$commandName=$firstChar.substr($commandName, 1);
+		if ($prefix==""){
 		$cmdName="Ips_Command_".$firstChar.substr($commandName, 1);
-		$fileName="Ips_Command_".$cmdName.".php";
+		}
+		else {
+		$cmdName=$prefix."_".$firstChar.substr($commandName, 1);
+		}
 		return $cmdName::getInstance();
 
 	}

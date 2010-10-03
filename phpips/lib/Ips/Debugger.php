@@ -12,8 +12,6 @@ class Ips_Debugger {
 		$registry=Ips_Registry::getInstance();
 		
 		if ($registry->isDebugEnabled()){
-		//
-			
 			$fb=new FB();
 			//$fb->log(debug_backtrace());
 			$fb->log($var);
