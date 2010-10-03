@@ -28,7 +28,7 @@ $result = $ids->run();
 if (!$result->isEmpty()) {
 	// Take a look at the result object with the ips system
 	require_once (PATH_TO_ROOT . "phpips/lib/Ips/Init.php");
-	$IpsInit=Ips_Init::init();
+	$IpsInit=Ips_Init::init("phpips/etc/System.ini");
 	$ips=Ips_System::getInstance($result);
 	$ips->run();
 }

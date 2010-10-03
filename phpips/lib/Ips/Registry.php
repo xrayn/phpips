@@ -13,12 +13,17 @@ class Ips_Registry {
 	const KEY_DEBUGGER_CONFIG_MODE="DebuggerMode";
 	const KEY_CONFIGURATION="ActionConfiguration";
 	const KEY_TAG_NAMES = "TagNames";
+	const KEY_COMMAND_MODULE_NAME="CommandsModuleName";
+	const KEY_USE_CUSTOM_COMMANDS="UseCustomCommands";
 
 	protected function __construct() {
 		//set default values
 		$this->_values[self::KEY_DEBUGGER_CONFIG_MODE]=false;
 		$this->_values[self::KEY_SIMULATION_CONFIG_MODE]=true;
 		$this->_values[self::KEY_TAG_NAMES]=array("sqli","xss","rce","dos","csrf","id","lfi","rfe","dt");
+		$this->_values[self::KEY_USE_CUSTOM_COMMANDS]=false;
+		$this->_values[self::KEY_COMMAND_MODULE_NAME]="Default";
+
 	}
 	private function __clone(){
 	}
@@ -43,6 +48,38 @@ class Ips_Registry {
 		}
 		return $this;
 	}
+
+	public function setCommandModule($moduleName="Default"){
+		if ($moduleName!="default"){
+			$this->_values[self::KEY_USE_CUSTOM_COMMANDS]=true;
+		} else {
+			$this->_values[self::KEY_USE_CUSTOM_COMMANDS]=false;
+		}
+			
+		$this->_values[self::KEY_COMMAND_MODULE_NAME]=$moduleName;
+		return $this;
+	}
+	/**
+	 * This is used in the factory which creates the commands
+	 * The factory get a Command Name as a Value and loads the apropriate Class and the singleton Object.
+	 * 
+	 * 
+	 * @return string
+	 */
+	public function getCommandModulePrefix() {
+		if ($this->_values[self::KEY_COMMAND_MODULE_NAME]=="Default"){
+			return "Ips_Command_";
+		}
+		else {
+			return "Custom_Command_Module_".$this->_values[self::KEY_COMMAND_MODULE_NAME]."_";
+		}
+	}
+	public function disableCustomCommands(){
+		$this->_values[self::KEY_USE_CUSTOM_COMMANDS]=false;
+		$this->_values[self::KEY_COMMAND_MODULE_NAME]=="Default";
+		return $this;
+	}
+
 	public function getTags(){
 		return $this->_values[self::KEY_TAG_NAMES];
 	}

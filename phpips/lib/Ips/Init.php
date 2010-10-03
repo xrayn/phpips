@@ -4,36 +4,128 @@ require_once "phpips/lib/IpsClassLoader.php";
 
 class Ips_Init {
 	private static $_instance=null;
-
-	public static function init($config=null){
+	protected $_configFile=null;
+	/**
+	 * 
+	 * @var Ips_Registry
+	 */
+	protected $_registry=null;
+	public static function init($configFile=null){
 		if (self::$_instance==null)
-		self::$_instance=new Ips_Init();
+		self::$_instance=new Ips_Init($configFile);
 
 		return self::$_instance;
 	}
-	
-	protected function __construct(){
+
+	protected function __construct($configFile){
 		//first of all load autoloader
 		spl_autoload_register(array("IpsClassLoader","autoload"));
-	
-		$this->__init();
-	
+
+		$this->__init($configFile);
+
 	}
-	
+
 	protected function __clone(){}
 
-	protected function __init(){
+	protected function __init($configFile=null){
+		if ($configFile!=null && file_exists(PATH_TO_ROOT.$configFile)){
+			$this->_configFile=$configFile;
+		}
+		else {
+			throw new Exception("File ".PATH_TO_ROOT.$configFile." was not found");
+		}
 		//create new Registry instance!
-		$registry=Ips_Registry::getInstance();
-		
+		$this->_registry=Ips_Registry::getInstance();
+
 		//load configuration
 		// later do this from an ini file!
-		$IpsActionConfig=Ips_Configuration_Factory::createConfig("ini",PATH_TO_ROOT."phpips/lib/Config/ActionConfig.ini");
-		$registry->setActionConfiguration($IpsActionConfig);
-		$registry->setTags(array("sqli","xss","rce","dos","csrf","id","lfi","rfe","dt"));
-		$registry->enableDebug();
-		$registry->disableSimulation();
-	}
+		if ($this->_configFile==null){
+			// do some default things.
 
+			$IpsActionConfig=Ips_Configuration_Factory::createConfig("ini",PATH_TO_ROOT."phpips/lib/Config/ActionConfig.ini");
+			$this->_registry->setActionConfiguration($IpsActionConfig);
+			$this->_registry->setTags(array("sqli","xss","rce","dos","csrf","id","lfi","rfe","dt"));
+			$this->_registry->enableDebug();
+			$this->_registry->disableSimulation();
+		}
+		else {
+			$this->_parseConfig();
+		}
+	}
+	protected function _parseConfig(){
+		//readin configuration
+
+		/*
+		 * 
+		 * caution here, the order is significant. some things must be loaded before
+		 * another. e.g. Command Prefix Path must be set earlier than ActionConfig, cause this one loads
+		 * Command Classes
+		 * 
+		 */
+		$config_array=parse_ini_file($this->_configFile,true);
+
+		if (preg_match("/^[Oo][Nn]$/",$config_array["BaseConfig"]["DebbuggingMode"])){
+			$this->_registry->enableDebug();
+		}
+		else {
+			$this->_registry->disableDebug();
+		}
+		if (preg_match("/^[Oo][Nn]$/",$config_array["BaseConfig"]["SimulationMode"])){
+			$this->_registry->enableSimulation();
+		}
+		else {
+			$this->_registry->disableSimulation();
+		}
+		if ($config_array["BaseConfig"]["DefinedTags"]!=""){
+			$this->_registry->setTags(explode(",", strtolower($config_array["BaseConfig"]["DefinedTags"])));
+		}
+		
+		if ($config_array["BaseConfig"]["UseCustomCommands"]=="On"){
+			if ($config_array["BaseConfig"]["CustomCommandModuleName"]==""){
+				// if this is not set use Default Module instead 
+				$this->_registry->disableCustomCommands();
+			
+			}
+			else {
+				$this->_registry->setCommandModule($config_array["BaseConfig"]["CustomCommandModuleName"]);
+			}
+		}
+		
+		
+		else {
+			$this->_registry->setTags(array("sqli","xss","rce","dos","csrf","id","lfi","rfe","dt"));
+		}
+		if ($config_array["BaseConfig"]["ActionConfig"]["Type"]!=""){
+			/*
+			 * ActionConfiguration is a bit trickier, handle it in a sepaerate method.
+			 */
+			$this->_parseActionConfig($config_array["BaseConfig"]["ActionConfig"]);
+		}
+
+
+
+		Ips_Debugger::debug($this->_registry);
+
+	}
+	protected function _parseActionConfig($actionConfig=null){
+		// Caller Method gives us an array!
+
+		//till now we only can use ini files so only handle this.
+		if (preg_match("/^[Ii][Nn][Ii]$/", $actionConfig["Type"])){
+			$path=PATH_TO_ROOT.$actionConfig["Path"];
+			if (isset($actionConfig["Path"]) && file_exists($path)){
+				$IpsActionConfig=Ips_Configuration_Factory::createConfig("ini",$path);
+				$this->_registry->setActionConfiguration($IpsActionConfig);
+			}
+			else {
+				throw new Exception("File ".$path." could not be found");
+			}
+		}
+		else {
+			throw new Exception("IPS_INIT: Currently the type ".$actionConfig["Type"]." is not Supported.");
+		}
+		Ips_Debugger::debug($actionConfig);
+
+	}
 
 }
