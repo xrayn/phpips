@@ -123,9 +123,10 @@ class Ips_Init {
 
 		//till now we only can use ini files so only handle this.
 		if (preg_match("/^[Ii][Nn][Ii]$/", $actionConfig["Type"])){
-			$path=PATH_TO_ROOT.$actionConfig["Path"];
+			$path=$actionConfig["Path"];
 			if (isset($actionConfig["Path"]) && file_exists($path)){
-				$IpsActionConfig=Ips_Configuration_Factory::createConfig("ini",$path);
+				Ips_Debugger::debug($path);
+				$IpsActionConfig=Ips_Configuration_Factory::createConfig("ini",array("path"=>$path));
 				$this->_registry->setActionConfiguration($IpsActionConfig);
 			}
 			else {
