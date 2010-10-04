@@ -1,0 +1,87 @@
+1. In you application set the PATH_TO_ROOT
+
+define("PATH_TO_ROOT", "/your/path/to/webserver/doc/root/phpips" );
+
+
+
+2. Set the Include Path to phpids. In this case use the one wich is in phpips root folder.
+
+set_include_path  (get_include_path().":".PATH_TO_ROOT."phpids-0.6.4/lib/");
+
+1. & 2. 
+
+take a look in example.php.
+
+3. You already hav a configured phpids
+
+Use it by setting your paths correctly.
+
+To start the IPS System you have to use:
+<?php
+
+
+$result = $ids->run();
+if (!$result->isEmpty()) {
+	// Take a look at the result object with the ips system
+	require_once (PATH_TO_ROOT . "phpips/lib/Ips/Init.php");
+	$IpsInit=Ips_Init::init("phpips/etc/System.ini");
+	$ips=Ips_System::getInstance($result);
+	$ips->run();
+}
+
+?>
+
+Where $ids is an instance of your running PHP-IDS System
+
+3. You don't have PHP-IDS running
+
+Well, you just can use the phpids version which shipped with this package.
+
+Take a here in example.php to get a basic understanding what to do.
+
+<?php
+// define the path to your
+define("PATH_TO_ROOT", "/var/www/eclipse-workspaces/eclipse_helios/php-ips/" );
+// use phpids shipped with this package
+set_include_path  (get_include_path().":".PATH_TO_ROOT."phpids-0.6.4/lib/");
+
+//define the request array
+$request = array("GET" => $_GET, "POST" => $_POST, "COOKIE" => $_COOKIE);
+
+//include the init Class from phpips
+if (file_exists(PATH_TO_ROOT."phpids-0.6.4/lib/IDS/Init.php")){
+	require_once(PATH_TO_ROOT."phpids-0.6.4/lib/IDS/Init.php");
+}
+else {
+	throw new Exception("PHPIDS not found");
+}
+
+// load PHPIDS
+
+$init=IDS_Init::init(PATH_TO_ROOT."phpids-0.6.4/lib/IDS/Config/Config.ini.php");
+$ids = new IDS_Monitor($request, $init);
+
+//get the result object from PHPIDS
+$result = $ids->run();
+
+//check if something badly is found
+if (!$result->isEmpty()) {
+	//if something is found
+
+	// include the IPS Init Class
+	require_once (PATH_TO_ROOT . "phpips/lib/Ips/Init.php");
+	
+	//initialise the system
+	$IpsInit=Ips_Init::init("phpips/etc/System.ini");
+	//run the IPS System
+	$ips=Ips_System::getInstance($result);
+	$ips->run();
+}
+
+4. Edit the System Configuration under phpips/etc/System.ini to fit your needs.
+(Documentation is inside the ini file)
+
+5. Edit the Action Configuration under phpids/lib/Config/ActionConfig.ini
+(For testing these values should be fine)
+
+

@@ -1,12 +1,14 @@
 <?php
-
-
+// define the path to your
 define("PATH_TO_ROOT", "/var/www/eclipse-workspaces/eclipse_helios/php-ips/" );
-
+//define("PATH_TO_ROOT", "/your/path/to/webserver/doc/root/phpips" );
+// use phpids shipped with this package
 set_include_path  (get_include_path().":".PATH_TO_ROOT."phpids-0.6.4/lib/");
 
-
+//define the request array
 $request = array("GET" => $_GET, "POST" => $_POST, "COOKIE" => $_COOKIE);
+
+//include the init Class from phpips
 if (file_exists(PATH_TO_ROOT."phpids-0.6.4/lib/IDS/Init.php")){
 	require_once(PATH_TO_ROOT."phpids-0.6.4/lib/IDS/Init.php");
 }
@@ -14,26 +16,27 @@ else {
 	throw new Exception("PHPIDS not found");
 }
 
-?>
-<?php
-/*
- * initiate the IDS
- *
- */
+// load PHPIDS
+
 $init=IDS_Init::init(PATH_TO_ROOT."phpids-0.6.4/lib/IDS/Config/Config.ini.php");
 $ids = new IDS_Monitor($request, $init);
-/**
- * @var IDS_Report
- */
+
+//get the result object from PHPIDS
 $result = $ids->run();
+
+//check if something badly is found
 if (!$result->isEmpty()) {
-	// Take a look at the result object with the ips system
+	//if something is found
+
+	// include the IPS Init Class
 	require_once (PATH_TO_ROOT . "phpips/lib/Ips/Init.php");
+	
+	//initialise the system
 	$IpsInit=Ips_Init::init("phpips/etc/System.ini");
+	//run the IPS System
 	$ips=Ips_System::getInstance($result);
 	$ips->run();
 }
-
 
 
 ?>
