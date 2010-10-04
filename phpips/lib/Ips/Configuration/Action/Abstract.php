@@ -1,5 +1,5 @@
 <?php
-abstract class Ips_Actionconfiguration_Abstract {
+abstract class Ips_Configuration_Action_Abstract {
 
 
 	protected $_config=array();

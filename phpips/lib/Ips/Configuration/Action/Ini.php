@@ -1,7 +1,7 @@
 <?php
 
 
-class Ips_Actionconfiguration_Ini extends Ips_Actionconfiguration_Abstract{
+class Ips_Configuration_Action_Ini extends Ips_Configuration_Action_Abstract{
 
 
 	public function initActionConfig($path=null){

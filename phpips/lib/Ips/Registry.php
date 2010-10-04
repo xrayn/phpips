@@ -164,7 +164,7 @@ class Ips_Registry {
 	public function getTags(){
 		return $this->_values[self::KEY_TAG_NAMES];
 	}
-	public function setActionConfiguration(Ips_Actionconfiguration_Abstract $config){
+	public function setActionConfiguration(Ips_Configuration_Action_Abstract $config){
 		$this->_values[self::KEY_CONFIGURATION]=$config;
 		return $this;
 	}

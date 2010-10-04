@@ -133,7 +133,7 @@ class Ips_Init {
 			$path=$actionConfig["Path"];
 			if (isset($actionConfig["Path"]) && file_exists($path)){
 				Ips_Debugger::debug($path);
-				$IpsActionConfig=Ips_Actionconfiguration_Factory::createConfig("ini",array("path"=>$path));
+				$IpsActionConfig=Ips_Configuration_Action_Factory::createConfig("ini",array("path"=>$path));
 				$this->_registry->setActionConfiguration($IpsActionConfig);
 			}
 			else {
