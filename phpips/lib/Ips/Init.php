@@ -1,6 +1,6 @@
 <?php
 //require_once 'phpips/lib/classes/class.IpsRegistry.inc.php';
-require_once "phpips/lib/IpsClassLoader.php";
+require_once(PATH_TO_ROOT."phpips/lib/IpsClassLoader.php");
 
 class Ips_Init {
 	private static $_instance=null;
@@ -20,7 +20,6 @@ class Ips_Init {
 	protected function __construct($configFile){
 		//first of all load autoloader
 		spl_autoload_register(array("IpsClassLoader","autoload"));
-
 		$this->__init($configFile);
 
 	}
@@ -29,7 +28,7 @@ class Ips_Init {
 
 	protected function __init($configFile=null){
 		if ($configFile!=null && file_exists(PATH_TO_ROOT.$configFile)){
-			$this->_configFile=$configFile;
+			$this->_configFile=PATH_TO_ROOT.$configFile;
 		}
 		else {
 			throw new Exception("File ".PATH_TO_ROOT.$configFile." was not found");
@@ -79,7 +78,15 @@ class Ips_Init {
 		if ($config_array["BaseConfig"]["DefinedTags"]!=""){
 			$this->_registry->setTags(explode(",", strtolower($config_array["BaseConfig"]["DefinedTags"])));
 		}
-
+		if ($config_array["BaseConfig"]["ExternalSessionManagementMode"]=="On"){
+			//enable externalSession Manager
+			//use defined static method to manage sessions
+			$this->_registry->
+			setExternalSessionManager(
+				$config_array["BaseConfig"]["ExternalSessionManagement"]["Class"],
+				$config_array["BaseConfig"]["ExternalSessionManagement"]["Method"]
+			);
+		} 
 		if ($config_array["BaseConfig"]["UseCustomCommands"]=="On"){
 			if ($config_array["BaseConfig"]["CustomCommandModuleName"]==""){
 				// if this is not set use Default Module instead

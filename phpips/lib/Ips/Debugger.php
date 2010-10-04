@@ -2,7 +2,7 @@
 
 if (file_exists(PATH_TO_ROOT . "phpips/lib/external/FirePHPCore/FirePHP.class.php") && 
 	file_exists(PATH_TO_ROOT . "phpips/lib/external/FirePHPCore/FirePHP.class.php")){
-		require_once 'phpips/lib/external/FirePHPCore/fb.php';		
+		require_once PATH_TO_ROOT .'phpips/lib/external/FirePHPCore/fb.php';		
 	}
 
 class Ips_Debugger {

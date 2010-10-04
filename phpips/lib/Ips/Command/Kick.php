@@ -25,7 +25,7 @@ class Ips_Command_Kick extends Ips_Command_Abstract {
 		
 			Ips_Debugger::debug(array("executed Kick Command"=>$this->_data));
 			Ips_Debugger::debug(array("CALLED REALEXECUTE"=>$this));
-			global $db, $settings, $phpids_settings;
+			
 			
 //			$actTime = time();
 //			$expireTime = $actTime + $phpids_settings["kick_seconds"];

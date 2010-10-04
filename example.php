@@ -2,7 +2,8 @@
 
 
 define("PATH_TO_ROOT", "/var/www/eclipse-workspaces/eclipse_helios/php-ips/" );
-set_include_path  (PATH_TO_ROOT."phpids-0.6.4/lib/");
+
+set_include_path  (get_include_path().":".PATH_TO_ROOT."phpids-0.6.4/lib/");
 
 
 $request = array("GET" => $_GET, "POST" => $_POST, "COOKIE" => $_COOKIE);

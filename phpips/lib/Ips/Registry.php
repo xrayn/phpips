@@ -16,6 +16,9 @@ class Ips_Registry {
 	const KEY_COMMAND_MODULE_NAME="CommandsModuleName";
 	const KEY_USE_CUSTOM_COMMANDS="UseCustomCommands";
 	const KEY_ADDITIONAL_COMMAND_CONFIG="AdditionalCommandConfig";
+	const KEY_EXTERNAL_SESSION_MANAGER_MODE="ExternalSessionManagerMode";
+	const KEY_EXTERNAL_SESSION_MANAGER_CLASS="ExternalSessionManagerClass";
+	const KEY_EXTERNAL_SESSION_MANAGER_METHOD="ExternalSessionManagerMethod";
 
 	protected function __construct() {
 		//set default values
@@ -25,6 +28,9 @@ class Ips_Registry {
 		$this->_values[self::KEY_USE_CUSTOM_COMMANDS]=false;
 		$this->_values[self::KEY_COMMAND_MODULE_NAME]="Default";
 		$this->_values[self::KEY_ADDITIONAL_COMMAND_CONFIG]=array();
+		$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_MODE]=false;
+		$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_CLASS]=null;
+		$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_METHOD]=null;
 
 	}
 	private function __clone(){
@@ -35,7 +41,27 @@ class Ips_Registry {
 
 		return self::$_instance;
 	}
+	public function setExternalSessionManager($className="self",$methodName=null){
+		$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_MODE]=true;
+		$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_CLASS]=$className;
+		$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_METHOD]=$methodName;
+		return $this;
+	}
+	//	public function enableExternalSessionManagerMode(){
+	//		$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_MODE]=true;
+	//	}
 
+	public function disableExternalSessionManagerMode(){
+		$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_MODE]=false;
+
+	}
+	public function isExternalSessionManagerEnabled(){
+		return $this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_MODE];
+	}
+	public function getExternalSessionManager(){
+		return array( "className"=>$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_CLASS],
+	 				  "methodName"=>$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_METHOD]);
+	}
 	public function addCommandConfigValue($key,$value){
 		$this->_values[self::KEY_ADDITIONAL_COMMAND_CONFIG][$key]=$value;
 		return $this;

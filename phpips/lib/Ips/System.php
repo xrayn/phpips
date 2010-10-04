@@ -4,13 +4,13 @@
 class Ips_System {
 	private static $_instance=null;
 	/**
-	 * 
+	 *
 	 * @var IpsConfiguration
 	 */
 	protected  $_ActionConfiguration=null;
-	
+
 	/**
-	 * 
+	 *
 	 * @var Ips_Registry
 	 */
 	protected $_registry=null;
@@ -54,7 +54,7 @@ class Ips_System {
 		$this->_registry=Ips_Registry::getInstance();
 		$this->setIdsResult($idsResult);
 		$this->_ActionConfiguration=$this->_registry->getActionConfiguration();
-		
+
 		$this->_init();
 	}
 
@@ -63,6 +63,15 @@ class Ips_System {
 	 * if no session is found, start one. Further if a session is found regenerate the id so each request gets a new session_id
 	 */
 	private function __checkSession(){
+		if ($this->_registry->isExternalSessionManagerEnabled()){
+			$sessionManager=$this->_registry->getExternalSessionManager();
+			$className=$sessionManager["className"];
+			$methodName=$sessionManager["methodName"];
+			$auth=call_user_func(array($className, $methodName));
+			
+			//$auth=$methodName::$foo;
+			$auth->getStorage();
+		}
 		if (session_id()==""){
 			session_start();
 		}
@@ -75,7 +84,7 @@ class Ips_System {
 
 	private function _init() {
 		$this->__checkSession();
-		
+
 		/*
 		 * Adding the actions and initialize singleton Commands.
 		 * Actions have to be added in priority order:
@@ -95,12 +104,12 @@ class Ips_System {
 		}
 		else {
 			foreach ($this->_ActionConfiguration->getActionConfig() as $actionName=>$actionConfig){
-				
+
 				$commandList=array();
 				foreach ($actionConfig["commandList"] as $key=>$singleActionConfig){
-					
+						
 					array_push($commandList,Ips_Command_Factory::createCommand($singleActionConfig));
-					
+						
 				}
 				$this->addAction($actionName, $commandList);
 			}
