@@ -69,6 +69,13 @@ class Ips_Init {
 		else {
 			$this->_registry->disableDebug();
 		}
+		if (isset($config_array["BaseConfig"]["BasePath"]) && $config_array["BaseConfig"]["BasePath"]!=""){
+			$this->_registry->setBasePath($config_array["BaseConfig"]["BasePath"]);
+		}
+		else {
+			throw new Exception("INIT: No BasePath set in System.ini. Cannot proceed!");
+		}
+		
 		if (preg_match("/^[Oo][Nn]$/",$config_array["BaseConfig"]["SimulationMode"])){
 			$this->_registry->enableSimulation();
 		}
@@ -126,7 +133,7 @@ class Ips_Init {
 			$path=$actionConfig["Path"];
 			if (isset($actionConfig["Path"]) && file_exists($path)){
 				Ips_Debugger::debug($path);
-				$IpsActionConfig=Ips_Configuration_Factory::createConfig("ini",array("path"=>$path));
+				$IpsActionConfig=Ips_Actionconfiguration_Factory::createConfig("ini",array("path"=>$path));
 				$this->_registry->setActionConfiguration($IpsActionConfig);
 			}
 			else {

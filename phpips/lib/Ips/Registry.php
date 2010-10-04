@@ -8,7 +8,7 @@ class Ips_Registry {
 	private static $_instance=null;
 
 	protected $_values=array();
-
+	const KEY_BASE_PATH="BasePath";
 	const KEY_SIMULATION_CONFIG_MODE="SimulationMode";
 	const KEY_DEBUGGER_CONFIG_MODE="DebuggerMode";
 	const KEY_CONFIGURATION="ActionConfiguration";
@@ -35,6 +35,16 @@ class Ips_Registry {
 	}
 	private function __clone(){
 	}
+
+	public function setBasePath($path){
+		$this->_values[self::KEY_BASE_PATH]=$path;
+		return $this;
+	}
+	public function getBasePath(){
+		return $this->_values[self::KEY_BASE_PATH];
+		
+	}
+
 	public static function getInstance(){
 		if (self::$_instance==null)
 		self::$_instance=new Ips_Registry();
@@ -59,8 +69,13 @@ class Ips_Registry {
 		return $this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_MODE];
 	}
 	public function getExternalSessionManager(){
-		return array( "className"=>$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_CLASS],
+		if ($this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_MODE]==true){
+			return array( "className"=>$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_CLASS],
 	 				  "methodName"=>$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_METHOD]);
+		}
+		else{
+			throw new Exception("Cannot load ExternalSessionManager when not enabled!");
+		}
 	}
 	public function addCommandConfigValue($key,$value){
 		$this->_values[self::KEY_ADDITIONAL_COMMAND_CONFIG][$key]=$value;
@@ -149,7 +164,7 @@ class Ips_Registry {
 	public function getTags(){
 		return $this->_values[self::KEY_TAG_NAMES];
 	}
-	public function setActionConfiguration(Ips_Configuration_Abstract $config){
+	public function setActionConfiguration(Ips_Actionconfiguration_Abstract $config){
 		$this->_values[self::KEY_CONFIGURATION]=$config;
 		return $this;
 	}
