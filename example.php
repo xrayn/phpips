@@ -52,6 +52,14 @@ if (!$result->isEmpty()) {
 
 
 <html>
+<?php if($_GET["reset_session"]=="doit"){
+	session_start();
+	session_destroy();
+	echo "Session destroyed<br>";
+
+}
+
+?>
 <?php 
 if ($_POST["simulation_mode"]!="off"){
 	echo "Simulation Mode<br/>";
@@ -62,18 +70,12 @@ else {
 
 }
 
-if($_GET["reset_session"]=="doit"){
-	session_start();
-	session_destroy();
-	echo "Session destroyed";
-
-}
 
 ?>
 
 <form action="example.php" method="get">
 <input type="hidden" name="reset_session" value="doit"/>
-<input type="submit">
+<input type="submit" value="Reset Session">
 
 </form>
 <form action="example.php" method="post">
