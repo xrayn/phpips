@@ -16,8 +16,9 @@ class Custom_Command_Module_Test_Ban extends Ips_Command_Abstract {
 		//BAN THE USER HOWEVER
 		
 		//Then just die()
-		die("You sent a malicious request to the Application. I'm dying now for you! Bye!");
 		session_destroy();
+		die("You sent a malicious request to the Application. I'm dying now for you! Bye!<br> Session destroyed!");
+		
 	}
 
 	protected function realSimulate($fileHandle) {
@@ -27,6 +28,8 @@ class Custom_Command_Module_Test_Ban extends Ips_Command_Abstract {
 		$logText = "\n-------\n";
 		$logText.= "SIMULATING BAN COMMAND\n";
 		$logText.= "Banning User from System\n";
+		$logText.= "Destroy Session\n";
+		$logText.= "dying()!\n";
 		$logText.= "-------\n";
 		fwrite($fileHandle, $logText);
 		$this->_registry->add("SimulationOutputBuffer", $this->_registry->get("SimulationOutputBuffer").$logText);

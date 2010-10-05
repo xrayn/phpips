@@ -7,13 +7,12 @@ set_include_path  (get_include_path().":".PATH_TO_ROOT."phpids-0.6.4/lib/");
 
 //define the request array
 $request = array("GET" => $_GET, "POST" => $_POST, "COOKIE" => $_COOKIE);
-
 //include the init Class from phpips
 if (file_exists(PATH_TO_ROOT."phpids-0.6.4/lib/IDS/Init.php")){
-	require_once(PATH_TO_ROOT."phpids-0.6.4/lib/IDS/Init.php");
+        require_once(PATH_TO_ROOT."phpids-0.6.4/lib/IDS/Init.php");
 }
 else {
-	throw new Exception("PHPIDS not found");
+        throw new Exception("PHPIDS not found");
 }
 
 // load PHPIDS
@@ -23,14 +22,7 @@ $ids = new IDS_Monitor($request, $init);
 
 //get the result object from PHPIDS
 $result = $ids->run();
-if ($_POST["simulation_mode"]!="off"){
-	echo "Simulation Mode<br/>";
 
-}
-else {
-	echo "REAL MODE<br/>";
-
-}
 
 //check if something badly is found
 if (!$result->isEmpty()) {
@@ -60,12 +52,36 @@ if (!$result->isEmpty()) {
 
 
 <html>
+<?php 
+if ($_POST["simulation_mode"]!="off"){
+	echo "Simulation Mode<br/>";
+
+}
+else {
+	echo "REAL MODE<br/>";
+
+}
+
+if($_GET["reset_session"]=="doit"){
+	session_start();
+	session_destroy();
+	echo "Session destroyed";
+
+}
+
+?>
+
+<form action="example.php" method="get">
+<input type="hidden" name="reset_session" value="doit"/>
+<input type="submit">
+
+</form>
 <form action="example.php" method="post">
-<p><input type="radio" name="simulation_mode" value="on"
-<?php echo ($_POST["simulation_mode"]!="off")? "checked='checked'":""?>>
+<p><input type="radio" name="simulation_mode" value="on" 
+<?php echo ($_POST["simulation_mode"]!="off")? "checked='checked'":""?>/>
 Simulation On<br>
 <input type="radio" name="simulation_mode" value="off"
-<?php echo ($_POST["simulation_mode"]=="off")? "checked='checked'":""?>>
+<?php echo ($_POST["simulation_mode"]=="off")? "checked='checked'":""?>/>
 Simulation Off<br>
 </p>
 
