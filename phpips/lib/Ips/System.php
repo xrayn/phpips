@@ -68,7 +68,7 @@ class Ips_System {
 			$className=$sessionManager["className"];
 			$methodName=$sessionManager["methodName"];
 			$auth=call_user_func(array($className, $methodName));
-			
+				
 			//$auth=$methodName::$foo;
 			$auth->getStorage();
 		}
@@ -107,9 +107,9 @@ class Ips_System {
 
 				$commandList=array();
 				foreach ($actionConfig["commandList"] as $key=>$singleActionConfig){
-						
+
 					array_push($commandList,Ips_Command_Factory::createCommand($singleActionConfig));
-						
+
 				}
 				$this->addAction($actionName, $commandList);
 			}
@@ -155,21 +155,48 @@ class Ips_System {
 	 * Commands of action with highest priority are executed first.
 	 */
 	private function finalExecuteDispatcher() {
-		global $phpids_settings;
+
+		if($this->_registry->isSimulationEnabled()){
+			$info=$this->simulationModeInfoBuilder();
+			$logfile=$this->_registry->getSimulationLogFile();
+			$fh = fopen($logfile, "a+");
+			fwrite($fh, $info["header"]);
+				
+		}
 
 		foreach($this->_actions as $key => $commands){
 			foreach($commands as $command){
 				if($this->_registry->isSimulationEnabled()) {
 					Ips_Debugger::debug("SIMULATION MODE");
-					if($command->simulate()) {
+					//log some info for simulation
+					call_user_func(array($command,"simulate"));
+					if(call_user_func(array($command,"simulate"))) {
 						return;		//Exit IPS, but not rest of script
 					}
+				
 				}
 				else {
 					$command->execute();
 				}
 			}
 		}
+	if($this->_registry->isSimulationEnabled()){
+		fwrite($fh, $info["footer"]);
+		}
+		
+	}
+
+	private function simulationModeInfoBuilder(){
+		$logheader="\n#################################\n";
+		$logheader.="Date: ".date("Y-m-d H:i:s",time())."\n";
+		$logheader.= "IMPACT FOUND -> STARTING SIMULATION\n";
+		$logheader.= "Attacker: ".$_SERVER['REMOTE_ADDR']."\n";
+		$logheader.="\n#################################\n";
+
+		$logfooter="\n##################################\n";
+		$logfooter.="           END\n";
+		$logfooter.="##################################\n";
+		return array("header"=>$logheader,"footer"=>$logfooter);
 	}
 
 	/**

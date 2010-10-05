@@ -81,7 +81,7 @@ class Ips_Command_Mail extends Ips_Command_Abstract {
 	protected function realSimulate($fileHandle) {
 		$action = $this->getLastAction();
 
-		$logText = Output::echoDate("Y-m-d H:i:s", time()).": ";
+
 		$logText.= "Mailing to admins, ".$action." of ";
 
 		if(isset($_SESSION["Vorname"])) {

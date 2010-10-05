@@ -10,6 +10,7 @@ class Ips_Registry {
 	protected $_values=array();
 	const KEY_BASE_PATH="BasePath";
 	const KEY_SIMULATION_CONFIG_MODE="SimulationMode";
+	const KEY_SIMULATION_CONFIG_LOGFILE="SimulationLogfile";
 	const KEY_DEBUGGER_CONFIG_MODE="DebuggerMode";
 	const KEY_CONFIGURATION="ActionConfiguration";
 	const KEY_TAG_NAMES = "TagNames";
@@ -24,6 +25,7 @@ class Ips_Registry {
 		//set default values
 		$this->_values[self::KEY_DEBUGGER_CONFIG_MODE]=false;
 		$this->_values[self::KEY_SIMULATION_CONFIG_MODE]=true;
+		$this->_values[self::KEY_SIMULATION_CONFIG_LOGFILE]="/dev/null";
 		$this->_values[self::KEY_TAG_NAMES]=array("sqli","xss","rce","dos","csrf","id","lfi","rfe","dt");
 		$this->_values[self::KEY_USE_CUSTOM_COMMANDS]=false;
 		$this->_values[self::KEY_COMMAND_MODULE_NAME]="Default";
@@ -60,7 +62,13 @@ class Ips_Registry {
 	//	public function enableExternalSessionManagerMode(){
 	//		$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_MODE]=true;
 	//	}
-
+	public function setSimulationLogFile($logfile){
+		$this->_values[self::KEY_SIMULATION_CONFIG_LOGFILE]=$logfile;
+		return $this;
+	}
+	public function getSimulationLogFile(){
+		return $this->_values[self::KEY_SIMULATION_CONFIG_LOGFILE];
+	}
 	public function disableExternalSessionManagerMode(){
 		$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_MODE]=false;
 

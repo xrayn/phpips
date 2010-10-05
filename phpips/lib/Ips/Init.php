@@ -83,6 +83,13 @@ class Ips_Init {
 		if (preg_match("/^[Oo][Nn]$/",$config_array->get("SimulationMode"))){
 			$this->_registry->enableSimulation();
 		}
+		else 
+		{
+			$this->_registry->disableSimulation();
+		}
+		if ($config_array->get("SimulationLogfile")!=""){
+			$this->_registry->setSimulationLogFile($config_array->get("SimulationLogfile"));
+		}
 		else {
 			$this->_registry->disableSimulation();
 		}

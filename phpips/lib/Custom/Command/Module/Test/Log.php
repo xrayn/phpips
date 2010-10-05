@@ -4,7 +4,7 @@ class Custom_Command_Module_Test_Log extends Ips_Command_Abstract {
 
 	public static function getInstance() {
 		if (self::$_instance==null)
-		self::$_instance=new Custom_Command_Module_Test_Log();
+		self::$_instance=new self();
 		return self::$_instance;
 	}
 
@@ -33,20 +33,13 @@ class Custom_Command_Module_Test_Log extends Ips_Command_Abstract {
 	}
 
 	protected function realSimulate($fileHandle) {
-		global $phpids_settings;
 
-		$logText = "-------\n";
-		$logText.= Output::echoDate("Y-m-d H:i:s", time()).": ";
-		$logText.= "Logging to '".$phpids_settings["command_logfile"]."', ";
+		Ips_Debugger::debug(array("CALLED CUSTOM REALSIMULATE"=>$this));
 
-		if(isset($_SESSION["Vorname"])) {
-			$logText.= "attacker: ".$_SESSION["Vorname"]." ".$_SESSION["Nachname"];
-		} else {
-			$logText.= "attacker: ".$_SERVER['REMOTE_ADDR'];
-		}
-
-		$logText.= "\n";
-
+		$logText = "\n-------\n";
+		$logText.= "SIMULATING LOGGING COMMAND\n";
+		$logText.= "Logging to file /tmp/mylog\n";
+		$logText.= "-------\n";
 		fwrite($fileHandle, $logText);
 
 		return false;

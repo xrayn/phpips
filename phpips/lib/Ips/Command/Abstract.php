@@ -5,8 +5,13 @@ abstract class Ips_Command_Abstract implements Ips_Command_Interface {
 	//private static $_instance=null;
 	protected $_isExecuted=false;
 	protected $_execute=false;
+	/**
+	 * 
+	 * @var Ips_Registry
+	 */
 	protected $_registry=null;
-
+	
+	
 	public function enableExecute() {
 		$this->_execute=true;
 		return $this;
@@ -36,16 +41,17 @@ abstract class Ips_Command_Abstract implements Ips_Command_Interface {
 	}
 
 	public function simulate() {
-		global $phpids_settings;
+	
 		$exitSystem = false;
-
 		if(!$this->_isExecuted && $this->_execute) {
+			
 			$this->_isExecuted = true;
-			$logfile = $phpids_settings["simulation_logfile"];
-
+			$logfile=$this->_registry->getSimulationLogFile();
+			
 			if(!empty($logfile)) {
-				$logfile = realpath(PATH_TO_ROOT) . "/" . $logfile;
+				$logfile =  $logfile;
 				$fh = fopen($logfile, "a+");
+				
 				$exitSystem = $this->realSimulate($fh);
 			}
 		}
