@@ -61,47 +61,51 @@ class Ips_Init {
 		 * Command Classes
 		 *
 		 */
-		$config_array=parse_ini_file($this->_configFile,true);
-
-		if (preg_match("/^[Oo][Nn]$/",$config_array["BaseConfig"]["DebbuggingMode"])){
+		require_once PATH_TO_ROOT.'phpips/lib/external/Zend/Config/Ini.php';
+		$config=new external_Zend_Config_Ini($this->_configFile);
+		
+		$config_array=$config->get("BaseConfig");
+		//$config_array=parse_ini_file($this->_configFile,true);
+		
+		if (preg_match("/^[Oo][Nn]$/",$config_array->get("DebbuggingMode"))){
 			$this->_registry->enableDebug();
 		}
 		else {
 			$this->_registry->disableDebug();
 		}
-		if (isset($config_array["BaseConfig"]["BasePath"]) && $config_array["BaseConfig"]["BasePath"]!=""){
-			$this->_registry->setBasePath($config_array["BaseConfig"]["BasePath"]);
+		if ($config_array->get("BasePath")!=""){
+			$this->_registry->setBasePath($config_array->get("BasePath"));
 		}
 		else {
 			throw new Exception("INIT: No BasePath set in System.ini. Cannot proceed!");
 		}
 		
-		if (preg_match("/^[Oo][Nn]$/",$config_array["BaseConfig"]["SimulationMode"])){
+		if (preg_match("/^[Oo][Nn]$/",$config_array->get("SimulationMode"))){
 			$this->_registry->enableSimulation();
 		}
 		else {
 			$this->_registry->disableSimulation();
 		}
-		if ($config_array["BaseConfig"]["DefinedTags"]!=""){
-			$this->_registry->setTags(explode(",", strtolower($config_array["BaseConfig"]["DefinedTags"])));
+		if ($config_array->get("DefinedTags")!=""){
+			$this->_registry->setTags(explode(",", strtolower($config_array->get("DefinedTags"))));
 		}
-		if ($config_array["BaseConfig"]["ExternalSessionManagementMode"]=="On"){
+		if ($config_array->get("ExternalSessionManagementMode")=="On"){
 			//enable externalSession Manager
 			//use defined static method to manage sessions
 			$this->_registry->
 			setExternalSessionManager(
-				$config_array["BaseConfig"]["ExternalSessionManagement"]["Class"],
-				$config_array["BaseConfig"]["ExternalSessionManagement"]["Method"]
+				$config_array->get(ExternalSessionManagement)->get("Class"),
+				$config_array->get(ExternalSessionManagement)->get("Method")
 			);
 		} 
-		if ($config_array["BaseConfig"]["UseCustomCommands"]=="On"){
-			if ($config_array["BaseConfig"]["CustomCommandModuleName"]==""){
+		if ($config_array->get("UseCustomCommands")=="On"){
+			if ($config_array->get("CustomCommandModuleName")==""){
 				// if this is not set use Default Module instead
 				$this->_registry->disableCustomCommands();
 					
 			}
 			else {
-				$this->_registry->setCommandModule($config_array["BaseConfig"]["CustomCommandModuleName"]);
+				$this->_registry->setCommandModule($config_array->get("CustomCommandModuleName"));
 			}
 		}
 
@@ -109,17 +113,18 @@ class Ips_Init {
 		else {
 			$this->_registry->setTags(array("sqli","xss","rce","dos","csrf","id","lfi","rfe","dt"));
 		}
-		if ($config_array["BaseConfig"]["ActionConfig"]["Type"]!=""){
+		if ($config_array->get("ActionConfig")->get("Type")!=""){
 			/*
 			 * ActionConfiguration is a bit trickier, handle it in a sepaerate method.
 			 */
-			$this->_parseActionConfig($config_array["BaseConfig"]["ActionConfig"]);
+			Ips_Debugger::debug($this->_registry);
+			$this->_parseActionConfig($config_array->get("ActionConfig")->toArray());
 		}
 
 		//handle the CommandConfig in seperate method
 
-		if (isset($config_array["CommandConfig"])){
-			$this->_parseCommandConfig($config_array["CommandConfig"]);
+		if ($config_array->get("CommandConfig")){
+			$this->_parseCommandConfig($config_array->get("CommandConfig"));
 		}
 
 		Ips_Debugger::debug($this->_registry);
@@ -131,13 +136,14 @@ class Ips_Init {
 		//till now we only can use ini files so only handle this.
 		if (preg_match("/^[Ii][Nn][Ii]$/", $actionConfig["Type"])){
 			$path=$actionConfig["Path"];
-			if (isset($actionConfig["Path"]) && file_exists($path)){
+			if (isset($actionConfig["Path"]) && file_exists($this->_registry->getBasePath().$path)){
 				Ips_Debugger::debug($path);
+				
 				$IpsActionConfig=Ips_Configuration_Action_Factory::createConfig("ini",array("path"=>$path));
 				$this->_registry->setActionConfiguration($IpsActionConfig);
 			}
 			else {
-				throw new Exception("File ".$path." could not be found");
+				throw new Exception("File ".$this->_registry->getBasePath().$path." could not be found");
 			}
 		}
 		else {

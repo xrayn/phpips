@@ -24,44 +24,9 @@ class Ips_Command_Factory{
 		//$cmdName=$prefix."_".$firstChar.substr($commandName, 1);
 		
 		//check if the Command exists
-		
-		return $cmdName::getInstance();
+		// this is a php < 5.3 fix
+		return call_user_func(array($cmdName, "getInstance"));
+		//return $cmdName::getInstance();
 
-	}
-
-	/**
-	 * Use this if your php is < 5.3
-	 * You have to register your commands within here for yourself
-	 * @param string $commandName
-	 * @throws Exception
-	 * @return IpsCommandAbstract
-	 */
-	public static function createCommandOldWay($commandName){
-		require_once (PATH_TO_ROOT . "phpips/lib/classes/class.IpsLogCommand.inc.php");
-		require_once (PATH_TO_ROOT . "phpips/lib/classes/class.IpsKickCommand.inc.php");
-		require_once (PATH_TO_ROOT . "phpips/lib/classes/class.IpsBanCommand.inc.php");
-		require_once (PATH_TO_ROOT . "phpips/lib/classes/class.IpsWarnCommand.inc.php");
-		require_once (PATH_TO_ROOT . "phpips/lib/classes/class.IpsMailCommand.inc.php");
-
-		switch (strtolower($commandName)){
-			case "log":
-				$command=IpsLogCommand::getInstance();
-				break;
-			case "mail":
-				$command=IpsMailCommand::getInstance();
-				break;
-			case "warn":
-				$command=IpsWarnCommand::getInstance();
-				break;
-			case "kick":
-				$command=IpsKickCommand::getInstance();
-				break;
-			case "ban":
-				$command=IpsBanCommand::getInstance();
-				break;
-			default:
-				throw new Exception("There is no Command:".$commandName);
-		}
-		return $command;
 	}
 }

@@ -14,11 +14,9 @@ class Ips_Command_Warn extends Ips_Command_Abstract {
 	}
 
 	protected function realExecute() {
-//		global $settings;
-//
-//		$url = $settings["estudy_base_url"];
-//		header("Location: $url"."news/news.php?IDSWarning");
-//		exit(0);
+		Ips_Debugger::debug(array("CALLED REALEXECUTE"=>$this));
+		// we don't need to log to the db twice so we just log to the file
+		Ips_Debugger::debug(array("executed Warn Command"=>$this->_data));
 	}
 
 	protected function realSimulate($fileHandle) {
