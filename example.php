@@ -11,8 +11,6 @@ $request = array("GET" => $_GET, "POST" => $_POST, "COOKIE" => $_COOKIE);
 if($_GET["reset_session"]=="doit"){
 	session_start();
 	session_destroy();
-	echo "Session destroyed<br>";
-
 }
 
 
@@ -62,7 +60,23 @@ if (!$result->isEmpty()) {
 
 
 <html>
-
+<p>
+This is a demo page demonstrating basic usage of the phpips system.<br/>
+You can do different thing here.<br/>
+First of all, you are able to reset your current session, this is only for testing, cause in a real world this makes no sense :)<br/>
+<br/>
+You can use the textarea to insert malicious code and submit it to the system.<br/>
+<br/>
+If you are in simulation mode, the page tells you what the underlying commands do.<br/>
+If you switch the simulation mode to off, the page reacts based on your input you inserted.<br/>
+<br/>
+When no malicious input is found, the ips system isn't loaded.
+You can try to insert code that breaks the html of the site, e.g. <?php  echo htmlspecialchars("\"</textarea>");?><br/>
+<br/>
+Well I don't care. In a real world example you would not run phpips in this way. It's just to show you, what is currently possible.<br/>
+So have fun, playing around!
+<br/>
+</p>
 <?php
 if ($_POST["simulation_mode"]!="off"){
 	echo "Simulation Mode<br/>";
