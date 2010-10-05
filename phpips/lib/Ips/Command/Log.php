@@ -11,8 +11,9 @@ class Ips_Command_Log extends Ips_Command_Abstract {
 	}
 
 	protected function realExecute() {
-		//global $phpids_settings;
 
+		//$this->_registry->getCommandConfigFrom($commandName="mail",$key="Email");
+		
 		Ips_Debugger::debug(array("CALLED REALEXECUTE"=>$this));
 		// we don't need to log to the db twice so we just log to the file
 		Ips_Debugger::debug(array("executed Log Command"=>$this->_data));

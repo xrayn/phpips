@@ -124,12 +124,13 @@ class Ips_Init {
 		//handle the CommandConfig in seperate method
 
 		if ($config_array->get("CommandConfig")){
-			$this->_parseCommandConfig($config_array->get("CommandConfig"));
+			$this->_parseCommandConfig($config_array->get("CommandConfig")->toArray());
 		}
 
 		Ips_Debugger::debug($this->_registry);
 
 	}
+	
 	protected function _parseActionConfig($actionConfig=null){
 		// Caller Method gives us an array!
 
@@ -149,7 +150,6 @@ class Ips_Init {
 		else {
 			throw new Exception("IPS_INIT: Currently the type ".$actionConfig["Type"]." is not Supported.");
 		}
-		Ips_Debugger::debug($actionConfig);
 
 	}
 
@@ -159,8 +159,10 @@ class Ips_Init {
 	 * @param unknown_type $commandConfig
 	 */
 	protected function _parseCommandConfig($commandConfig){
+		
 		foreach ($commandConfig as $name=>$value){
-			$this->_registry->addCommandConfigValue($name,$value);
+			//Ips_Debugger::debug(array($name=>$value->toArray()));
+				$this->_registry->addCommandConfigValue($name,$value->toArray());
 		}
 		//var_dump($this->_registry->getCommandConfigFrom(""));
 	}
