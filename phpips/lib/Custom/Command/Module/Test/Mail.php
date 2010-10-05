@@ -23,6 +23,7 @@ class Custom_Command_Module_Test_Mail extends Ips_Command_Abstract {
 		$logText.= "SIMULATING MAIL COMMAND\n";
 		$logText.= "Sending E-Mail\n";
 		$logText.= "-------\n";
+		$this->_registry->add("SimulationOutputBuffer", $this->_registry->get("SimulationOutputBuffer").$logText);
 		fwrite($fileHandle, $logText);
 
 		return false;

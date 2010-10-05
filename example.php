@@ -23,6 +23,14 @@ $ids = new IDS_Monitor($request, $init);
 
 //get the result object from PHPIDS
 $result = $ids->run();
+if ($_POST["simulation_mode"]!="off"){
+	echo "Simulation Mode<br/>";
+
+}
+else {
+	echo "REAL MODE<br/>";
+
+}
 
 //check if something badly is found
 if (!$result->isEmpty()) {
@@ -30,9 +38,18 @@ if (!$result->isEmpty()) {
 
 	// include the IPS Init Class
 	require_once (PATH_TO_ROOT . "phpips/lib/Ips/Init.php");
-	
+
 	//initialise the system
 	$IpsInit=Ips_Init::init("phpips/etc/System.ini");
+	$registry=Ips_Registry::getInstance();
+	if ($_POST["simulation_mode"]!="off"){
+		$registry->enableSimulation();
+
+	} else {
+		$registry->disableSimulation();
+	}
+	//var_dump(Ips_Registry::getInstance());
+	//die();
 	//run the IPS System
 	$ips=Ips_System::getInstance($result);
 	$ips->run();
@@ -43,8 +60,29 @@ if (!$result->isEmpty()) {
 
 
 <html>
-<form action="example.php" method="post"><textarea name="data" rows="10"
-	cols="50"><?php if(isset($_POST["data"]))echo $_POST["data"]?></textarea>
+<form action="example.php" method="post">
+<p><input type="radio" name="simulation_mode" value="on"
+<?php echo ($_POST["simulation_mode"]!="off")? "checked='checked'":""?>>
+Simulation On<br>
+<input type="radio" name="simulation_mode" value="off"
+<?php echo ($_POST["simulation_mode"]=="off")? "checked='checked'":""?>>
+Simulation Off<br>
+</p>
+
+<textarea name="data" rows="10" cols="50"><?php if(isset($_POST["data"]))echo $_POST["data"]?></textarea>
 <br />
 <input type="submit" /></form>
+<?php 
+if ($_POST["simulation_mode"]!="off"):
+?>
+<textarea rows="20" cols="50" readonly="readonly">
+<?php 
+if (isset($registry)){
+	echo $registry->get("SimulationOutputBuffer");
+}
+?>
+</textarea>
+<?php 
+endif
+?>
 </html>

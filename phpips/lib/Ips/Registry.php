@@ -20,6 +20,7 @@ class Ips_Registry {
 	const KEY_EXTERNAL_SESSION_MANAGER_MODE="ExternalSessionManagerMode";
 	const KEY_EXTERNAL_SESSION_MANAGER_CLASS="ExternalSessionManagerClass";
 	const KEY_EXTERNAL_SESSION_MANAGER_METHOD="ExternalSessionManagerMethod";
+	const KEY_SIMULATION_OUTPUT_BUFFER="SimulationOutputBuffer";
 
 	protected function __construct() {
 		//set default values
@@ -33,6 +34,7 @@ class Ips_Registry {
 		$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_MODE]=false;
 		$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_CLASS]=null;
 		$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_METHOD]=null;
+		$this->_values[self::KEY_SIMULATION_OUTPUT_BUFFER]="";
 
 	}
 	private function __clone(){
@@ -228,7 +230,7 @@ class Ips_Registry {
 		}
 		else {
 			//delete the value first than add, in delete we can check that no predefined values are deleted
-			$this->_delete($key);
+			$this->delete($key);
 			$this->_values[$key]=$value;
 		}
 		return $this;

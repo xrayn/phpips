@@ -10,7 +10,7 @@
     ; basic settings - customize to make the PHPIDS work at all
     filter_type     = xml
     
-    base_path       = /var/www/ws_eclipse/RM_OTR/public/phpips/phpids-0.6.4/lib/IDS/
+    base_path       = /var/www/eclipse-workspaces/eclipse_helios/php-ips/phpids-0.6.4/lib/IDS/
     use_base_path   = true
     
     filter_path     = default_filter.xml

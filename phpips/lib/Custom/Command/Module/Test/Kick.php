@@ -24,7 +24,7 @@ class Custom_Command_Module_Test_Kick extends Ips_Command_Abstract {
 		$logText.= "Kicking User from System\n";
 		$logText.= "-------\n";
 		fwrite($fileHandle, $logText);
-
+		$this->_registry->add("SimulationOutputBuffer", $this->_registry->get("SimulationOutputBuffer").$logText);
 		return false;
 	}
 

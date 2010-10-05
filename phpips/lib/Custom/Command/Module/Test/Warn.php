@@ -38,7 +38,7 @@ class Custom_Command_Module_Test_Warn extends Ips_Command_Abstract {
 		$logText.= "SIMULATING WARN COMMAND\n";
 		$logText.= "-------\n";
 		fwrite($fileHandle, $logText);
-
+		$this->_registry->add("SimulationOutputBuffer", $this->_registry->get("SimulationOutputBuffer").$logText);
 		return false;
 	}
 

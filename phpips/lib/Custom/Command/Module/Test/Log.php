@@ -40,6 +40,7 @@ class Custom_Command_Module_Test_Log extends Ips_Command_Abstract {
 		$logText.= "SIMULATING LOGGING COMMAND\n";
 		$logText.= "Logging to file /tmp/mylog\n";
 		$logText.= "-------\n";
+		$this->_registry->add("SimulationOutputBuffer", $this->_registry->get("SimulationOutputBuffer").$logText);
 		fwrite($fileHandle, $logText);
 
 		return false;

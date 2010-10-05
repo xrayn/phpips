@@ -28,7 +28,7 @@ class Custom_Command_Module_Test_Ban extends Ips_Command_Abstract {
 		$logText.= "Banning User from System\n";
 		$logText.= "-------\n";
 		fwrite($fileHandle, $logText);
-
+		$this->_registry->add("SimulationOutputBuffer", $this->_registry->get("SimulationOutputBuffer").$logText);
 		return false;
 	}
 }

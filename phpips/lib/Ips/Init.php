@@ -101,8 +101,8 @@ class Ips_Init {
 			//use defined static method to manage sessions
 			$this->_registry->
 			setExternalSessionManager(
-				$config_array->get(ExternalSessionManagement)->get("Class"),
-				$config_array->get(ExternalSessionManagement)->get("Method")
+				$config_array->get("ExternalSessionManagement")->get("Class"),
+				$config_array->get("ExternalSessionManagement")->get("Method")
 			);
 		} 
 		if ($config_array->get("UseCustomCommands")=="On"){
