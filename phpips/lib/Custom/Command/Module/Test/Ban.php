@@ -17,6 +17,7 @@ class Custom_Command_Module_Test_Ban extends Ips_Command_Abstract {
 		
 		//Then just die()
 		die("You sent a malicious request to the Application. I'm dying now for you! Bye!");
+		session_destroy();
 	}
 
 	protected function realSimulate($fileHandle) {
