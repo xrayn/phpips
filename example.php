@@ -1,6 +1,6 @@
 <?php
 // define the path to your
-define("PATH_TO_ROOT", "/var/www/eclipse-workspaces/eclipse_helios/php-ips/" );
+define("PATH_TO_ROOT", "/var/www/webservers/www.ra23.net/documents/phpips/trunk/" );
 //define("PATH_TO_ROOT", "/your/path/to/webserver/doc/root/phpips" );
 // use phpids shipped with this package
 set_include_path  (get_include_path().":".PATH_TO_ROOT."phpids-0.6.4/lib/");
@@ -90,7 +90,6 @@ if($_GET["reset_session"]=="doit"){
 	echo "Session destroyed<br>";
 }
 
-
 ?>
 
 <form action="example.php" method="get"><input type="hidden"
@@ -109,16 +108,22 @@ Simulation Off<br>
 <br />
 <input type="submit" /></form>
 <?php
-if ($_POST["simulation_mode"]!="off"):
 ?>
 <textarea rows="20" cols="50" readonly="readonly">
 <?php
 if (isset($registry)){
+if ($result->getImpact()){
+	echo "Found an impact of: ".$result->getImpact()."\n";
+	echo "Your current Session impact is: \n";
+	foreach ($_SESSION["IPSDATA"] as $tag=>$impact){
+		echo $tag."=>".$impact."\n";
+	}
+}
+	echo "\nSimulation Output:\n";
 	echo $registry->get("SimulationOutputBuffer");
 }
 ?>
 </textarea>
 <?php
-endif
 ?>
 </html>
