@@ -22,7 +22,7 @@ else {
 }
 
 // load PHPIDS
-
+session_start();
 $init=IDS_Init::init(PATH_TO_ROOT."phpids-0.6.4/lib/IDS/Config/Config.ini.php");
 $ids = new IDS_Monitor($request, $init);
 
@@ -40,11 +40,11 @@ if (!$result->isEmpty()) {
 	//initialise the system
 	$IpsInit=Ips_Init::init("phpips/etc/System.ini");
 	$registry=Ips_Registry::getInstance();
-	if ($_POST["simulation_mode"]!="off"){
-		$registry->enableSimulation();
+	if ($_POST["simulation"]!="on" && isset($_POST["simulation"])){
+		$registry->disableSimulation();
 
 	} else {
-		$registry->disableSimulation();
+		$registry->enableSimulation();
 	}
 	//var_dump(Ips_Registry::getInstance());
 	//die();
@@ -59,7 +59,75 @@ if (!$result->isEmpty()) {
 
 
 
-<html>
+<html style="font-family: Verdana,Geneva,Arial,Helvetica,sans-serif; font-size:0.75em;">
+<div>
+<h1>IPS Demo Page</h1>
+<div style="float: left;">
+<div id="vector_form" style="background-color: #D9FFDD; width: 430px; padding: 10px;">
+<?php
+if ($_POST["simulation"]!="on" && isset($_POST["simulation"])){
+	echo "Real Mode<br/>";
+
+}
+else {
+	echo "Simulation Mode<br/>";
+
+}
+if($_GET["reset_session"]=="doit"){
+	echo "Session destroyed<br>";
+}
+
+?>
+
+<form action="example.php" method="get"><input type="hidden"
+	name="reset_session" value="doit" /> <input type="submit"
+	value="Reset Session"></form>
+<form action="example.php" method="post">
+<p>
+</p>
+<label for="data">Insert a vector here:</label><br/>
+<textarea name="data" rows="10" cols="50"><?php if(isset($_POST["data"]))echo $_POST["data"]?></textarea>
+<br /><br/>
+<input type="checkbox" id="simulation" name="simulation" <?php echo ($_POST["simulation"]!="on" && isset($_POST["simulation"]))? "":"checked='checked'"?>/>
+<label for="simulation"> enable Simulation-Mode</label>
+<br/>
+<br/>
+<input type="submit" /></form>
+<?php
+?>
+</div>
+<div style="background-color: #FFAA9A; width: 430px; padding: 10px; margin-top: 20px;">
+<label for="simulation_output">Output from IPS</label></br>
+<textarea name="simulation_output" rows="28" cols="50" readonly="readonly">
+<?php
+if ($result->getImpact()){
+	echo "PHPIDS found an impact of: ".$result->getImpact()."\n";
+}
+else {
+}
+	echo "Your current session impact is: \n\n";
+if (isset($_SESSION["IPSDATA"] )){
+		foreach ($_SESSION["IPSDATA"] as $tag=>$impact){
+			echo $tag."=>".$impact."\n";
+		}
+}
+else {
+	echo "0\n";
+
+}	
+echo "\nSimulation Output:\n";
+
+if (isset($registry)){
+	echo $registry->get("SimulationOutputBuffer");
+}
+?>
+</textarea>
+</div>
+</div>
+<?php
+?>
+</div>
+<div style="float: left; margin-left: 15px; width: 600px;">
 <p>
 This is a demo page demonstrating basic usage of the phpips system.<br/>
 You can do different thing here.<br/>
@@ -77,53 +145,6 @@ Well I don't care. In a real world example you would not run phpips in this way.
 So have fun, playing around!
 <br/>
 </p>
-<?php
-if ($_POST["simulation_mode"]!="off"){
-	echo "Simulation Mode<br/>";
-
-}
-else {
-	echo "REAL MODE<br/>";
-
-}
-if($_GET["reset_session"]=="doit"){
-	echo "Session destroyed<br>";
-}
-
-?>
-
-<form action="example.php" method="get"><input type="hidden"
-	name="reset_session" value="doit" /> <input type="submit"
-	value="Reset Session"></form>
-<form action="example.php" method="post">
-<p><input type="radio" name="simulation_mode" value="on"
-<?php echo ($_POST["simulation_mode"]!="off")? "checked='checked'":""?> />
-Simulation On<br>
-<input type="radio" name="simulation_mode" value="off"
-<?php echo ($_POST["simulation_mode"]=="off")? "checked='checked'":""?> />
-Simulation Off<br>
-</p>
-
-<textarea name="data" rows="10" cols="50"><?php if(isset($_POST["data"]))echo $_POST["data"]?></textarea>
-<br />
-<input type="submit" /></form>
-<?php
-?>
-<textarea rows="20" cols="50" readonly="readonly">
-<?php
-if (isset($registry)){
-if ($result->getImpact()){
-	echo "Found an impact of: ".$result->getImpact()."\n";
-	echo "Your current Session impact is: \n";
-	foreach ($_SESSION["IPSDATA"] as $tag=>$impact){
-		echo $tag."=>".$impact."\n";
-	}
-}
-	echo "\nSimulation Output:\n";
-	echo $registry->get("SimulationOutputBuffer");
-}
-?>
-</textarea>
-<?php
-?>
+</div>
+</div>
 </html>
