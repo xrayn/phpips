@@ -40,7 +40,7 @@ if (!$result->isEmpty()) {
 	//initialise the system
 	$IpsInit=Ips_Init::init("phpips/etc/System.ini");
 	$registry=Ips_Registry::getInstance();
-	if ($_POST["simulation"]!="on" && isset($_POST["simulation"])){
+	if ($_POST["simulation"]!="on"){
 		$registry->disableSimulation();
 
 	} else {
@@ -65,7 +65,7 @@ if (!$result->isEmpty()) {
 <div style="float: left;">
 <div id="vector_form" style="background-color: #D9FFDD; width: 430px; padding: 10px;">
 <?php
-if ($_POST["simulation"]!="on" && isset($_POST["simulation"])){
+if ($_POST["simulation"]!="on"){
 	echo "Real Mode<br/>";
 
 }
@@ -86,9 +86,9 @@ if($_GET["reset_session"]=="doit"){
 <p>
 </p>
 <label for="data">Insert a vector here:</label><br/>
-<textarea name="data" rows="10" cols="50"><?php if(isset($_POST["data"]))echo $_POST["data"]?></textarea>
+<textarea name="data" rows="5" cols="50"><?php if(isset($_POST["data"]))echo $_POST["data"]?></textarea>
 <br /><br/>
-<input type="checkbox" id="simulation" name="simulation" <?php echo ($_POST["simulation"]!="on" && isset($_POST["simulation"]))? "":"checked='checked'"?>/>
+<input type="checkbox" id="simulation" name="simulation" <?php echo ($_POST["simulation"]=="on" || sizeof($_POST)==0)? "checked='checked'":""?>/>
 <label for="simulation"> enable Simulation-Mode</label>
 <br/>
 <br/>
