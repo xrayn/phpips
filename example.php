@@ -1,7 +1,9 @@
 <?php
 // define the path to your
-define("PATH_TO_ROOT", "/var/www/webservers/www.ra23.net/documents/phpips/trunk/" );
+//define("PATH_TO_ROOT", "/var/www/webservers/www.ra23.net/documents/phpips/trunk/" );
 //define("PATH_TO_ROOT", "/your/path/to/webserver/doc/root/phpips" );
+define("PATH_TO_ROOT", "/var/www/ws_eclipse/php-ips/" );
+
 // use phpids shipped with this package
 set_include_path  (get_include_path().":".PATH_TO_ROOT."phpids-0.6.4/lib/");
 

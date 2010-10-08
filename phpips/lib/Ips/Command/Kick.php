@@ -87,35 +87,6 @@ class Ips_Command_Kick extends Ips_Command_Abstract {
 	}
 
 	protected function realSimulate($fileHandle) {
-		global $db;
-
-		$logText = Output::echoDate("Y-m-d H:i:s", time()).": ";
-
-		$num_kicks = $this->getNumberOfKicks();		//last kick num + 1
-
-		if ($num_kicks>=3 || $this->_isInstantBan) {
-			$logText.= "Banning of ";
-			$num_kicks = 0;				//reset counter
-		} else {
-			$logText.= "Kicking of ";
-		}
-
-		if(isset($_SESSION["Vorname"])) {
-			$logText.= "attacker: ".$_SESSION["Vorname"]." ".$_SESSION["Nachname"];
-		} else {
-			$logText.= "attacker: ".$_SERVER['REMOTE_ADDR'];
-		}
-
-		$logText.= "\n";
-
-		fwrite($fileHandle, $logText);
-
-		// Simulate logout:
-		unset($_SESSION["IDSDATA"]);
-		unset($_SESSION["IPSDATA"]);
-
-		// Save 'num_kicks_by_ips' in User-Table 
-		$db->query("UPDATE user SET num_kicks_by_ips='".$num_kicks."' WHERE ID='".$_SESSION["userid"]."'");
 
 		return true;
 	}

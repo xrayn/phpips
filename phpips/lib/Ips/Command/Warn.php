@@ -20,18 +20,7 @@ class Ips_Command_Warn extends Ips_Command_Abstract {
 	}
 
 	protected function realSimulate($fileHandle) {
-		$logText = Output::echoDate("Y-m-d H:i:s", time()).": ";
-		$logText.= "Warning ";
 
-		if(isset($_SESSION["Vorname"])) {
-			$logText.= "attacker: ".$_SESSION["Vorname"]." ".$_SESSION["Nachname"];
-		} else {
-			$logText.= "attacker: ".$_SERVER['REMOTE_ADDR'];
-		}
-
-		$logText.= "\n";
-
-		fwrite($fileHandle, $logText);
 
 		return true;
 	}

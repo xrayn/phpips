@@ -1,5 +1,5 @@
 <?php
-class Custom_Command_Module_Test_Log extends Ips_Command_Abstract {
+class Module_Test_Command_Log extends Ips_Command_Abstract {
 	private static $_instance=null;
 
 	public static function getInstance() {

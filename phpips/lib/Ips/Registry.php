@@ -21,7 +21,8 @@ class Ips_Registry {
 	const KEY_EXTERNAL_SESSION_MANAGER_CLASS="ExternalSessionManagerClass";
 	const KEY_EXTERNAL_SESSION_MANAGER_METHOD="ExternalSessionManagerMethod";
 	const KEY_SIMULATION_OUTPUT_BUFFER="SimulationOutputBuffer";
-
+	const KEY_IDS_REPORT="IdsReport";
+	const KEY_SESSION_IMPACT="SessionImpact";
 	protected function __construct() {
 		//set default values
 		$this->_values[self::KEY_DEBUGGER_CONFIG_MODE]=false;
@@ -35,6 +36,7 @@ class Ips_Registry {
 		$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_CLASS]=null;
 		$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_METHOD]=null;
 		$this->_values[self::KEY_SIMULATION_OUTPUT_BUFFER]="";
+		$this->_values[self::KEY_IDS_REPORT]=null;
 
 	}
 	private function __clone(){
@@ -46,7 +48,7 @@ class Ips_Registry {
 	}
 	public function getBasePath(){
 		return $this->_values[self::KEY_BASE_PATH];
-		
+
 	}
 
 	public static function getInstance(){
@@ -55,11 +57,38 @@ class Ips_Registry {
 
 		return self::$_instance;
 	}
+	public function setSessionImpact($impact){
+		$this->_values[self::KEY_SESSION_IMPACT]=$impact;
+		return $this;
+	}
+	public function getSessionImpact($impact){
+		return $this->_values[self::KEY_SESSION_IMPACT];
+	}
+	public function getHighestSessionImpact(){
+		$highestImpact=0;
+		foreach ($this->_values[self::KEY_SESSION_IMPACT] as $tag=>$impact){
+			if($impact>$highestImpact){
+				$highestImpact=$impact;
+			}
+		}
+		return $highestImpact;
+	}
 	public function setExternalSessionManager($className="self",$methodName=null){
 		$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_MODE]=true;
 		$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_CLASS]=$className;
 		$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_METHOD]=$methodName;
 		return $this;
+	}
+	public function setIdsReport(IDS_Report $report){
+		$this->_values[self::KEY_IDS_REPORT]=$report;
+		return $this;
+	}
+	/**
+	 *
+	 * @return IDS_Report
+	 */
+	public function getidsReport(){
+		return $this->_values[self::KEY_IDS_REPORT];
 	}
 	//	public function enableExternalSessionManagerMode(){
 	//		$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_MODE]=true;
@@ -162,7 +191,7 @@ class Ips_Registry {
 			return "Ips_Command_";
 		}
 		else {
-			return "Custom_Command_Module_".$this->_values[self::KEY_COMMAND_MODULE_NAME]."_";
+			return "Module_".$this->_values[self::KEY_COMMAND_MODULE_NAME]."_Command_";
 		}
 	}
 	public function disableCustomCommands(){
