@@ -157,6 +157,5 @@ So have fun, playing around!
 <br/>
 </p>
 </div>
-</div>
 </body>
 </html>

@@ -58,6 +58,5 @@ if (!$result->isEmpty()) {
 	$ips=Ips_System::getInstance($result);
 	$ips->run();
 }
-spl_autoload_unregister(array("IpsClassLoader","autoload"));
 
 ?>

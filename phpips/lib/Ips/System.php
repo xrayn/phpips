@@ -330,6 +330,10 @@ class Ips_System {
 			// Execute enabled commands of action with highest priority
 			$this->finalExecuteDispatcher();
 		}
-
+		//remove the classloader, we dont want to do anything after here! 
+		//@todo: right place here?
+		
+		spl_autoload_unregister(array("IpsClassLoader","autoload"));
+		
 	}
 }
