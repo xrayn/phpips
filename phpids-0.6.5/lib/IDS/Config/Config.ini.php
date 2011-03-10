@@ -9,8 +9,8 @@
 
     ; basic settings - customize to make the PHPIDS work at all
     filter_type     = xml
-    ;base_path       = /var/www/webservers/www.ra23.net/documents/phpips/trunk/phpids-0.6.5/lib/IDS/
-    base_path       = /var/www/eclipse-workspaces/eclipse_helios/php-ips/phpids-0.6.5/lib/IDS/
+    base_path       = /var/www/webservers/www.ra23.net/documents/phpips/trunk/phpids-0.6.5/lib/IDS/
+    ;base_path       = /var/www/eclipse-workspaces/eclipse_helios/php-ips/phpids-0.6.5/lib/IDS/
     use_base_path   = true
     
     filter_path     = default_filter.xml

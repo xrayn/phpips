@@ -19,7 +19,7 @@ class Module_Example_Command_Log extends Ips_Command_Abstract {
 
 
 	protected function realExecute() {
-		$this->dbInsert();
+		#$this->dbInsert();
 	}
 
 	protected function realSimulate($fileHandle) {
