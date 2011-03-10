@@ -53,6 +53,7 @@ class Ips_System {
 		//init the registry!
 		$this->_registry=Ips_Registry::getInstance();
 		$this->setIdsResult($idsResult);
+		$this->_registry->setIdsReport($idsResult);
 		$this->_ActionConfiguration=$this->_registry->getActionConfiguration();
 
 		$this->_init();
@@ -78,7 +79,7 @@ class Ips_System {
 		/*
 		 * @lookhere: in very high performance applications this should be diabled. Or configurable!
 		 */
-		session_regenerate_id(TRUE);
+		//session_regenerate_id(TRUE);
 
 	}
 
@@ -277,6 +278,7 @@ class Ips_System {
 	private function saveSessionData($sessiondata) {
 		$_SESSION["IPSDATA"] = $sessiondata;
 		$this->_sessiondata = $sessiondata;
+		$this->_registry=$this->_registry->setSessionImpact($this->_sessiondata);
 		Ips_Debugger::debug("SAVE SESSION DATA!!!!");
 		Ips_Debugger::debug(array("SAVE SESSION DATA"=>$_SESSION["IPSDATA"]));
 	}
