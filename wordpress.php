@@ -2,7 +2,8 @@
 //read base path out of config
 
 // define the path to your
-define("PATH_TO_ROOT", "/var/www/webservers/www.ra23.net/documents/phpips/trunk/" );
+//define("PATH_TO_ROOT", "/var/www/webservers/www.ra23.net/documents/phpips/trunk/" );
+define("PATH_TO_ROOT", "/home/ar/eclipse-workspaces/eclipse_helios/php-ips/");
 /*
  * here: relative from PATH_TO_ROOT
  */
@@ -38,7 +39,6 @@ $result = $ids->run();
 
 
 //check if something badly is found
-if (!$result->isEmpty()) {
 	//if something is found
 
 	// include the IPS Init Class
@@ -57,6 +57,5 @@ if (!$result->isEmpty()) {
 	//run the IPS System
 	$ips=Ips_System::getInstance($result);
 	$ips->run();
-}
 
 ?>

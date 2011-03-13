@@ -65,13 +65,17 @@ class Ips_Registry {
 		return $this->_values[self::KEY_SESSION_IMPACT];
 	}
 	public function getHighestSessionImpact(){
+		if ($this->_values[self::KEY_SESSION_IMPACT]==null){
+			throw new Exception('$this->_values['.self::KEY_SESSION_IMPACT.'] was null, something is wrong with the session!');
+		}
 		$highestImpact=0;
 		foreach ($this->_values[self::KEY_SESSION_IMPACT] as $tag=>$impact){
 			if($impact>$highestImpact){
 				$highestImpact=$impact;
 			}
 		}
-		return $highestImpact;
+		$result=$highestImpact;
+		return $result;
 	}
 	public function setExternalSessionManager($className="self",$methodName=null){
 		$this->_values[self::KEY_EXTERNAL_SESSION_MANAGER_MODE]=true;

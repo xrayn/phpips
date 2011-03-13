@@ -79,7 +79,7 @@ class Ips_System {
 		/*
 		 * @lookhere: in very high performance applications this should be diabled. Or configurable!
 		 */
-		//session_regenerate_id(TRUE);
+		session_regenerate_id(TRUE);
 
 	}
 
@@ -300,20 +300,27 @@ class Ips_System {
 		if ($this->getImpact() > 1) {
 			//add each impact to sessiondata
 			foreach ($this->getTags() as $value) {
-				//disabled debug fb($value."".$IpsSystem->getImpact());
 				if(!isset($this->_sessiondata[$value]))
 				$this->_sessiondata[$value] = 0;
-
 				$this->_sessiondata[$value] += $this->getImpact();
-				//IpsDebugger::debug($sessiondata[$value]);
-
-				//disabled debug fb($sessiondata[$value]);
 			}
-			//disabled debug fb($sessiondata);
-			$this->saveSessionData($this->_sessiondata);
-
-		}
-
+		} 
+		/*
+		 * Always save current sessiondata back into session.
+		 * When attack happens and user is banned e.g. , trying reloading with no
+		 * vector we want all actions run again.
+		 * So this triggers the same actions like before.
+		 * 
+		 * As soon as an attacker is recognized by the system, we record his session 
+		 * until the session ends. (Currently there is no other way to do it)
+		 * If an implementer decides no running if no attack is found, this is ok, so this part
+		 * does not get executed, but in most systems without a login and so no real sessiondata, other than the
+		 * attackdata, we have no mechanism to disallow the user reloading the page, hence we need to track
+		 * them as long as the session is up.
+		 *  
+		 */	
+		$this->saveSessionData($this->_sessiondata);
+			
 		if ($this->checkSessionImpact()) {
 			Ips_Debugger::debug("Checking session Impact");
 			// one or more impacts in session reached critical value
