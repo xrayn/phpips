@@ -4,6 +4,7 @@ CREATE TABLE  `PHPIPS`.`LOGTABLE` (
 `session_impact` INT NOT NULL ,
 `attacker_ip` VARCHAR( 30 ) NOT NULL ,
 `affected_tags` VARCHAR( 255 ) NOT NULL ,
+`jsonevent` TEXT NOT NULL ,
 `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
